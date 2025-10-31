@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -17,12 +17,12 @@
         .category-btn { width: 100%; padding: 12px; margin-bottom: 8px; font-size: 1em; font-weight: bold; border: none; border-radius: 10px; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.2); color: white; text-align: left; }
         .category-btn:hover { transform: scale(1.03); }
         .main-content { flex-grow: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .flashcard-container { background: white; border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center; width: 100%; max-width: 400px; } /* MADE SMALLER */
-        .flashcard-image { width: 100%; height: 250px; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 120px; background: #f8f9fa; border-radius: 15px; border: 3px solid #ddd; overflow: hidden; } /* MADE SMALLER */
+        .flashcard-container { background: white; border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center; width: 100%; max-width: 400px; }
+        .flashcard-image { width: 100%; height: 250px; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 120px; background: #f8f9fa; border-radius: 15px; border: 3px solid #ddd; overflow: hidden; padding: 10px; }
         .flashcard-image img { width: 100%; height: 100%; object-fit: cover; }
-        .flashcard-name { font-size: 2.2em; color: #333; margin-bottom: 20px; font-weight: bold; min-height: 40px;} /* MADE SMALLER */
+        .flashcard-name { font-size: 2.2em; color: #333; margin-bottom: 20px; font-weight: bold; min-height: 40px;}
         .controls { display: flex; gap: 10px; justify-content: center; }
-        .control-btn { padding: 10px 20px; font-size: 1em; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; color: white; } /* MADE SMALLER */
+        .control-btn { padding: 10px 20px; font-size: 1em; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; color: white; }
         .btn-prev { background: #ff6b6b; }
         .btn-next { background: #51cf66; }
         .btn-speak { background: #4dabf7; }
@@ -37,24 +37,8 @@
                  <input type="text" id="search-input" placeholder="Search any word...">
                  <button onclick="searchPicture()">Search</button>
             </div>
-            <div class="categories" id="categories">
-                <button class="category-btn" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);" onclick="showCategory('wild')">🦁 Wild Animals</button>
-                <button class="category-btn" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);" onclick="showCategory('pets')">🐶 Pets</button>
-                <button class="category-btn" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);" onclick="showCategory('space')">🚀 Space</button>
-                <button class="category-btn" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);" onclick="showCategory('body')">👋 Human Body</button>
-                <button class="category-btn" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);" onclick="showCategory('colors')">🎨 Colors</button>
-                <button class="category-btn" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);" onclick="showCategory('shapes')">⭐️ Shapes</button>
-                <button class="category-btn" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);" onclick="showCategory('numbers')">🔢 Numbers</button>
-                <button class="category-btn" style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);" onclick="showCategory('polygons')">💠 Polygons</button>
-                <button class="category-btn" style="background: linear-gradient(135deg, #ff6e7f 0%, #bfe9ff 100%);" onclick="showCategory('careers')">🧑‍🏫 Careers</button>
-                <button class="category-btn" style="background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);" onclick="showCategory('transport')">🚗 Transport</button>
-                <button class="category-btn" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);" onclick="showCategory('family')">👨‍👩‍👧‍👦 Family</button>
-                <button class="category-btn" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);" onclick="showCategory('seasons')">🍂 Seasons</button>
-                <button class="category-btn" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);" onclick="showCategory('weather')">☀️ Weather</button>
-                <button class="category-btn" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);" onclick="showCategory('restaurant')">🍔 Restaurant</button>
-                <button class="category-btn" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);" onclick="showCategory('kitchen')">🍳 Kitchen</button>
-                <button class="category-btn" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);" onclick="showCategory('vegetables')">🥦 Vegetables</button>
-                <button class="category-btn" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);" onclick="showCategory('fruits')">🍓 Fruits</button>
+            <div class="categories" id="categories-container">
+                <!-- Buttons will be generated here -->
             </div>
         </aside>
         <main class="main-content">
@@ -71,25 +55,56 @@
         </main>
     </div>
     <script>
-        const flashcards = {
-            wild: [ {name: 'Lion', emoji: '🦁'}, {name: 'Tiger', emoji: '🐯'}, {name: 'Elephant', emoji: '🐘'}, {name: 'Giraffe', emoji: '🦒'}, {name: 'Zebra', emoji: '🦓'}, {name: 'Monkey', emoji: '🐒'}, {name: 'Gorilla', emoji: '🦍'}, {name: 'Bear', emoji: '🐻'}, {name: 'Panda', emoji: '🐼'}, {name: 'Fox', emoji: '🦊'}],
-            pets: [ {name: 'Dog', emoji: '🐕'}, {name: 'Cat', emoji: '🐈'}, {name: 'Rabbit', emoji: '🐇'}, {name: 'Hamster', emoji: '🐹'}, {name: 'Fish', emoji: '🐠'}, {name: 'Bird', emoji: '🐦'} ],
-            space: [ {name: 'Sun', emoji: '☀️'}, {name: 'Moon', emoji: '🌙'}, {name: 'Star', emoji: '⭐'}, {name: 'Earth', emoji: '🌍'}, {name: 'Rocket', emoji: '🚀'}, {name: 'Alien', emoji: '👽'} ],
-            body: [ {name: 'Head', emoji: '👤'}, {name: 'Eyes', emoji: '👀'}, {name: 'Nose', emoji: '👃'}, {name: 'Mouth', emoji: '👄'}, {name: 'Ears', emoji: '👂'}, {name: 'Hands', emoji: '✋'}, {name: 'Feet', emoji: '🦶'} ],
-            colors: [ {name: 'Red', emoji: '🔴'}, {name: 'Blue', emoji: '🔵'}, {name: 'Yellow', emoji: '🟡'}, {name: 'Green', emoji: '🟢'}, {name: 'Orange', emoji: '🟠'}, {name: 'Purple', emoji: '🟣'} ],
-            shapes: [ {name: 'Circle', emoji: '⭕'}, {name: 'Square', emoji: '🟦'}, {name: 'Triangle', emoji: '🔺'}, {name: 'Star', emoji: '⭐'}, {name: 'Heart', emoji: '❤️'} ],
-            numbers: Array.from({length: 100}, (_, i) => ({name: `${i + 1}`, emoji: `${i + 1}`})),
-            polygons: [ {name: 'Triangle', emoji: '🔺'}, {name: 'Square', emoji: '🟦'}, {name: 'Pentagon', emoji: '⬟'}, {name: 'Hexagon', emoji: '⬡'} ],
-            careers: [ {name: 'Doctor', emoji: '👨‍⚕️'}, {name: 'Teacher', emoji: '👨‍🏫'}, {name: 'Police Officer', emoji: '👮'}, {name: 'Firefighter', emoji: '👨‍🚒'}, {name: 'Chef', emoji: '👨‍🍳'} ],
-            transport: [ {name: 'Car', emoji: '🚗'}, {name: 'Bus', emoji: '🚌'}, {name: 'Train', emoji: '🚂'}, {name: 'Airplane', emoji: '✈️'}, {name: 'Boat', emoji: '⛵'} ],
-            family: [ {name: 'Mother', emoji: '👩'}, {name: 'Father', emoji: '👨'}, {name: 'Sister', emoji: '👧'}, {name: 'Brother', emoji: '👦'}, {name: 'Baby', emoji: '👶'} ],
-            seasons: [ {name: 'Spring', emoji: '🌸'}, {name: 'Summer', emoji: '☀️'}, {name: 'Autumn', emoji: '🍂'}, {name: 'Winter', emoji: '❄️'} ],
-            weather: [ {name: 'Sunny', emoji: '☀️'}, {name: 'Cloudy', emoji: '☁️'}, {name: 'Rainy', emoji: '🌧️'}, {name: 'Snowy', emoji: '❄️'}, {name: 'Windy', emoji: '💨'} ],
-            restaurant: [ {name: 'Pizza', emoji: '🍕'}, {name: 'Burger', emoji: '🍔'}, {name: 'Fries', emoji: '🍟'}, {name: 'Ice Cream', emoji: '🍦'} ],
-            kitchen: [ {name: 'Plate', emoji: '🍽️'}, {name: 'Fork', emoji: '🍴'}, {name: 'Spoon', emoji: '🥄'}, {name: 'Cup', emoji: '☕'}, {name: 'Knife', emoji: '🔪'} ],
-            vegetables: [ {name: 'Carrot', emoji: '🥕'}, {name: 'Broccoli', emoji: '🥦'}, {name: 'Tomato', emoji: '🍅'}, {name: 'Corn', emoji: '🌽'} ],
-            fruits: [ {name: 'Apple', emoji: '🍎'}, {name: 'Banana', emoji: '🍌'}, {name: 'Orange', emoji: '🍊'}, {name: 'Grapes', emoji: '🍇'}, {name: 'Strawberry', emoji: '🍓'} ]
+        const decks = {
+            'alphabet': [ {name: 'A'}, {name: 'B'}, {name: 'C'}, {name: 'D'}, {name: 'E'}, {name: 'F'}, {name: 'G'}, {name: 'H'}, {name: 'I'}, {name: 'J'}, {name: 'K'}, {name: 'L'}, {name: 'M'}, {name: 'N'}, {name: 'O'}, {name: 'P'}, {name: 'Q'}, {name: 'R'}, {name: 'S'}, {name: 'T'}, {name: 'U'}, {name: 'V'}, {name: 'W'}, {name: 'X'}, {name: 'Y'}, {name: 'Z'} ],
+            'sight-words': [ {name: 'the'}, {name: 'be'}, {name: 'to'}, {name: 'of'}, {name: 'and'}, {name: 'a'}, {name: 'in'}, {name: 'that'}, {name: 'have'}, {name: 'I'}, {name: 'it'}, {name: 'for'}, {name: 'not'}, {name: 'on'}, {name: 'with'}, {name: 'he'}, {name: 'as'}, {name: 'you'}, {name: 'do'}, {name: 'at'} ],
+            'cvc-words': [ {name: 'cat'}, {name: 'hat'}, {name: 'bat'}, {name: 'mat'}, {name: 'sat'}, {name: 'dog'}, {name: 'log'}, {name: 'hog'}, {name: 'fog'}, {name: 'jog'}, {name: 'pen'}, {name: 'ten'}, {name: 'hen'}, {name: 'men'}, {name: 'den'}, {name: 'pig'}, {name: 'dig'}, {name: 'big'}, {name: 'wig'}, {name: 'fig'}, {name: 'sun'}, {name: 'run'}, {name: 'fun'}, {name: 'bun'}, {name: 'nun'} ],
+            'prepositions': [ {name: 'in'}, {name: 'on'}, {name: 'at'}, {name: 'by'}, {name: 'for'}, {name: 'from'}, {name: 'of'}, {name: 'to'}, {name: 'with'}, {name: 'up'}, {name: 'down'}, {name: 'over'}, {name: 'under'}, {name: 'near'}, {name: 'out'}, {name: 'off'}, {name: 'into'}, {name: 'past'}, {name: 'next to'}, {name: 'above'} ],
+            'expressions': [ {name: 'Happy', emoji: '😄'}, {name: 'Sad', emoji: '😢'}, {name: 'Angry', emoji: '😠'}, {name: 'Surprised', emoji: '😮'}, {name: 'Laughing', emoji: '😂'}, {name: 'Crying', emoji: '😭'}, {name: 'Scared', emoji: '😨'}, {name: 'Tired', emoji: '😴'}, {name: 'Sick', emoji: '🤒'}, {name: 'Love', emoji: '😍'} ],
+            'wild-animals': [ {name: 'Lion', emoji: '🦁'}, {name: 'Tiger', emoji: '🐯'}, {name: 'Elephant', emoji: '🐘'}, {name: 'Giraffe', emoji: '🦒'}, {name: 'Zebra', emoji: '🦓'}, {name: 'Monkey', emoji: '🐒'} ],
+            'pets': [ {name: 'Dog', emoji: '🐕'}, {name: 'Cat', emoji: '🐈'}, {name: 'Rabbit', emoji: '🐇'}, {name: 'Hamster', emoji: '🐹'}, {name: 'Fish', emoji: '🐠'} ],
+            'space': [ {name: 'Sun', emoji: '☀️'}, {name: 'Moon', emoji: '🌙'}, {name: 'Star', emoji: '⭐'}, {name: 'Earth', emoji: '🌍'}, {name: 'Rocket', emoji: '🚀'} ],
+            'human-body': [ {name: 'Head', emoji: '👤'}, {name: 'Eyes', emoji: '👀'}, {name: 'Nose', emoji: '👃'}, {name: 'Mouth', emoji: '👄'}, {name: 'Hands', emoji: '✋'} ],
+            'colors': [ {name: 'Red', emoji: '🔴'}, {name: 'Blue', emoji: '🔵'}, {name: 'Yellow', emoji: '🟡'}, {name: 'Green', emoji: '🟢'}, {name: 'Purple', emoji: '🟣'} ],
+            'shapes': [ {name: 'Circle', emoji: '⭕'}, {name: 'Square', emoji: '🟦'}, {name: 'Triangle', emoji: '🔺'}, {name: 'Star', emoji: '⭐'}, {name: 'Heart', emoji: '❤️'} ],
+            'numbers': Array.from({length: 100}, (_, i) => ({name: `${i + 1}`, emoji: `${i + 1}`})),
+            'polygons': [ {name: 'Triangle', emoji: '🔺'}, {name: 'Square', emoji: '🟦'}, {name: 'Pentagon', emoji: '⬟'}, {name: 'Hexagon', emoji: '⬡'} ],
+            'careers': [ {name: 'Doctor', emoji: '👨‍⚕️'}, {name: 'Teacher', emoji: '👨‍🏫'}, {name: 'Police Officer', emoji: '👮'}, {name: 'Firefighter', emoji: '👨‍🚒'}, {name: 'Chef', emoji: '👨‍🍳'} ],
+            'transport': [ {name: 'Car', emoji: '🚗'}, {name: 'Bus', emoji: '🚌'}, {name: 'Train', emoji: '🚂'}, {name: 'Airplane', emoji: '✈️'}, {name: 'Boat', emoji: '⛵'} ],
+            'family': [ {name: 'Mother', emoji: '👩'}, {name: 'Father', emoji: '👨'}, {name: 'Sister', emoji: '👧'}, {name: 'Brother', emoji: '👦'}, {name: 'Baby', emoji: '👶'} ],
+            'seasons': [ {name: 'Spring', emoji: '🌸'}, {name: 'Summer', emoji: '☀️'}, {name: 'Autumn', emoji: '🍂'}, {name: 'Winter', emoji: '❄️'} ],
+            'weather': [ {name: 'Sunny', emoji: '☀️'}, {name: 'Cloudy', emoji: '☁️'}, {name: 'Rainy', emoji: '🌧️'}, {name: 'Snowy', emoji: '❄️'}, {name: 'Windy', emoji: '💨'} ],
+            'restaurant': [ {name: 'Pizza', emoji: '🍕'}, {name: 'Burger', emoji: '🍔'}, {name: 'Fries', emoji: '🍟'}, {name: 'Ice Cream', emoji: '🍦'} ],
+            'kitchen': [ {name: 'Plate', emoji: '🍽️'}, {name: 'Fork', emoji: '🍴'}, {name: 'Spoon', emoji: '🥄'}, {name: 'Cup', emoji: '☕'}, {name: 'Knife', emoji: '🔪'} ],
+            'vegetables': [ {name: 'Carrot', emoji: '🥕'}, {name: 'Broccoli', emoji: '🥦'}, {name: 'Tomato', emoji: '🍅'}, {name: 'Corn', emoji: '🌽'} ],
+            'fruits': [ {name: 'Apple', emoji: '🍎'}, {name: 'Banana', emoji: '🍌'}, {name: 'Orange', emoji: '🍊'}, {name: 'Grapes', emoji: '🍇'}, {name: 'Strawberry', emoji: '🍓'} ]
         };
+
+        const categoryButtonsConfig = [
+            { id: 'alphabet', name: 'Alphabet', style: 'linear-gradient(135deg, #f6d365 0%, #fda085 100%)', icon: '🔤' },
+            { id: 'sight-words', name: 'Sight Words', style: 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)', icon: '✍️' },
+            { id: 'cvc-words', name: 'CVC Words', style: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)', icon: '🅰️' },
+            { id: 'prepositions', name: 'Prepositions', style: 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)', icon: '➡️' },
+            { id: 'expressions', name: 'Expressions', style: 'linear-gradient(135deg, #ffedbc 0%, #ed4264 100%)', icon: '😄' },
+            { id: 'wild-animals', name: 'Wild Animals', style: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', icon: '🦁' },
+            { id: 'pets', name: 'Pets', style: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', icon: '🐶' },
+            { id: 'space', name: 'Space', style: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)', icon: '🚀' },
+            { id: 'human-body', name: 'Human Body', style: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)', icon: '👋' },
+            { id: 'colors', name: 'Colors', style: 'linear-gradient(135deg, #30cfd0 0%, #330867 100%)', icon: '🎨' },
+            { id: 'shapes', name: 'Shapes', style: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)', icon: '⭐️' },
+            { id: 'numbers', name: 'Numbers', style: 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)', icon: '🔢' },
+            { id: 'polygons', name: 'Polygons', style: 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)', icon: '💠' },
+            { id: 'careers', name: 'Careers', style: 'linear-gradient(135deg, #ff6e7f 0%, #bfe9ff 100%)', icon: '🧑‍🏫' },
+            { id: 'transport', name: 'Transport', style: 'linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%)', icon: '🚗' },
+            { id: 'family', name: 'Family', style: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', icon: '👨‍👩‍👧‍👦' },
+            { id: 'seasons', name: 'Seasons', style: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', icon: '🍂' },
+            { id: 'weather', name: 'Weather', style: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)', icon: '☀️' },
+            { id: 'restaurant', name: 'Restaurant', style: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)', icon: '🍔' },
+            { id: 'kitchen', name: 'Kitchen', style: 'linear-gradient(135deg, #30cfd0 0%, #330867 100%)', icon: '🍳' },
+            { id: 'vegetables', name: 'Vegetables', style: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)', icon: '🥦' },
+            { id: 'fruits', name: 'Fruits', style: 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)', icon: '🍓' }
+        ];
+
         let currentCategory = '';
         let currentIndex = 0;
         let currentWord = '';
@@ -100,6 +115,16 @@
         const searchInput = document.getElementById('search-input');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
+        const categoriesContainer = document.getElementById('categories-container');
+
+        function generateCategoryButtons() {
+            let buttonsHTML = '';
+            categoryButtonsConfig.forEach(cat => {
+                 buttonsHTML += `<button class="category-btn" style="background: ${cat.style};" onclick="showCategory('${cat.id}')">${cat.icon} ${cat.name}</button>`;
+            });
+            categoriesContainer.innerHTML = buttonsHTML;
+        }
+
         async function searchPicture() {
             const searchTerm = searchInput.value.trim();
             if (!searchTerm) return;
@@ -130,23 +155,38 @@
             }
         }
         searchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') searchPicture(); });
-        function showCategory(category) {
-            currentCategory = category;
+        
+        function showCategory(categoryKey) {
+            currentCategory = categoryKey;
             currentIndex = 0;
             prevBtn.style.display = 'block';
             nextBtn.style.display = 'block';
             showCard();
         }
+        
         function showCard() {
-            const card = flashcards[currentCategory][currentIndex];
-            flashcardImage.innerHTML = card.emoji;
+            const card = decks[currentCategory][currentIndex];
+            if (card.emoji) {
+                flashcardImage.style.fontSize = "120px";
+                flashcardImage.textContent = card.emoji;
+            } else {
+                flashcardImage.style.fontSize = "6em"; // Font size for letters/words
+                flashcardImage.textContent = card.name;
+            }
             flashcardName.textContent = card.name;
             currentWord = card.name;
-            counter.textContent = `${currentIndex + 1}/${flashcards[currentCategory].length}`;
-            speakCurrentWord(false); // don't auto-speak on category navigation
+            counter.textContent = `${currentIndex + 1}/${decks[currentCategory].length}`;
+            speakCurrentWord(false);
         }
-        function nextCard() { currentIndex = (currentIndex + 1) % flashcards[currentCategory].length; showCard(); }
-        function prevCard() { currentIndex = (currentIndex - 1 + flashcards[currentCategory].length) % flashcards[currentCategory].length; showCard(); }
+
+        function nextCard() { 
+            currentIndex = (currentIndex + 1) % decks[currentCategory].length; 
+            showCard(); 
+        }
+        function prevCard() { 
+            currentIndex = (currentIndex - 1 + decks[currentCategory].length) % decks[currentCategory].length; 
+            showCard(); 
+        }
         function speakCurrentWord(forceSpeak = true) {
             if (forceSpeak && 'speechSynthesis' in window && currentWord) {
                 window.speechSynthesis.cancel();
@@ -161,6 +201,8 @@
             if (prevBtn.style.display !== 'none' && e.key === 'ArrowLeft') prevCard();
             if (e.key === ' ') { e.preventDefault(); speakCurrentWord(); }
         });
+        
+        generateCategoryButtons();
     </script>
 </body>
-</html>
+</html>```

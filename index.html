@@ -103,7 +103,6 @@
         <aside class="sidebar">
             <h2 class="text-white text-2xl font-bold text-center mb-4">Categories</h2>
             
-            <!-- NEW: Search Bar -->
             <div class="mb-6">
                 <input type="text" id="search-input" class="w-full p-3 rounded-lg border-2 border-transparent focus:border-blue-400 focus:outline-none" placeholder="Search for any picture...">
                 <button onclick="searchPicture()" class="w-full mt-2 p-3 bg-green-500 hover:bg-green-600 text-white font-bold rounded-lg transition">Search</button>
@@ -159,6 +158,67 @@
         const nextBtn = document.getElementById('next-btn');
         const searchInput = document.getElementById('search-input');
 
+        // --- NEW: PEXELS API FUNCTIONALITY ---
+        const PEXELS_API_KEY = "ILRTk4vCDhwNFMRUWz9or1QAl9uEdRnF8CxWWnheDE2BLRWNGlwn78sW";
+
+        async function searchPicture() {
+            const searchTerm = searchInput.value.trim();
+            if (!searchTerm) {
+                alert("Please enter a word to search for.");
+                return;
+            }
+            
+            // Show a loading state
+            imageContainer.innerHTML = `<span style="font-size: 1rem;">Loading...</span>`;
+            nameContainer.textContent = "Searching...";
+            
+            const url = `https://api.pexels.com/v1/search?query=${searchTerm}&per_page=1`;
+            
+            try {
+                const response = await fetch(url, {
+                    headers: {
+                        Authorization: PEXELS_API_KEY
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Pexels API error: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.photos && data.photos.length > 0) {
+                    const imageUrl = data.photos[0].src.large; // Use the 'large' version of the photo
+                    imageContainer.innerHTML = `<img src="${imageUrl}" alt="${searchTerm}" class="w-full h-full object-cover">`;
+                    const capitalizedWord = searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1);
+                    nameContainer.textContent = capitalizedWord;
+                    currentWord = capitalizedWord;
+                    speakCard();
+                } else {
+                    imageContainer.innerHTML = `<span style="font-size: 1rem; text-align: center;">No image found for "${searchTerm}"</span>`;
+                    nameContainer.textContent = "Not Found";
+                    currentWord = "Not Found";
+                }
+
+            } catch (error) {
+                console.error("Failed to fetch image from Pexels:", error);
+                imageContainer.innerHTML = `<span style="font-size: 1rem; text-align: center;">Sorry, the search failed. Please try again.</span>`;
+                nameContainer.textContent = "Error";
+                currentWord = "Error";
+            }
+            
+            counterContainer.textContent = "Search Result";
+            prevBtn.style.display = 'none';
+            nextBtn.style.display = 'none';
+        }
+
+        searchInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                searchPicture();
+            }
+        });
+        // --- END OF NEW PEXELS CODE ---
+
         function showCategory(category) {
             currentCategory = category;
             currentIndex = 0;
@@ -174,36 +234,8 @@
             nameContainer.textContent = card.name;
             currentWord = card.name;
             counterContainer.textContent = `${currentIndex + 1} of ${cards.length}`;
-            speakCard(false); // Don't speak automatically unless user clicks
+            speakCard(false);
         }
-        
-        function searchPicture() {
-            const searchTerm = searchInput.value.trim();
-            if (!searchTerm) {
-                alert("Please enter a word to search for.");
-                return;
-            }
-            
-            // Unsplash Source provides random high-quality photos based on keywords
-            const imageUrl = `https://source.unsplash.com/600x600/?${searchTerm}`;
-            
-            imageContainer.innerHTML = `<img src="${imageUrl}" alt="${searchTerm}" class="w-full h-full object-cover">`;
-            nameContainer.textContent = searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1);
-            currentWord = searchTerm;
-            counterContainer.textContent = "Search Result";
-            
-            // Hide next/prev buttons for search results
-            prevBtn.style.display = 'none';
-            nextBtn.style.display = 'none';
-            
-            speakCard();
-        }
-
-        searchInput.addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                searchPicture();
-            }
-        });
 
         function nextCard() {
             const cards = flashcards[currentCategory];

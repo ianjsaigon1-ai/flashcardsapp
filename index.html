@@ -79,7 +79,7 @@
                 { image: "https://i.imgur.com/o2v8M6R.png", word: "Apple" }, { image: "https://i.imgur.com/tL8YQ3d.png", word: "Banana" },
                 { image: "https://i.imgur.com/yTqB1M0.png", word: "Strawberry" }, { image: "https://i.imgur.com/J3x2jY6.png", word: "Orange" },
                 { image: "https://i.imgur.com/5l3n6xH.png", word: "Grapes" }, { image: "https://i.imgur.com/2z8b2M6.png", word: "Carrot" },
-                { image: "https://i.imgur.com/8z6O8d3.png", word: "Broccoli" }, { image: "https://i.imgur.com/9j6n3kG.png", word: "Tomato" }
+                { image: "https://i.imgur.com/8z6O8d3.png", word: "Broccoli" }, { image: "https://i.imgur.com.com/9j6n3kG.png", word: "Tomato" }
             ],
             "Shapes": [
                 { image: "https://i.imgur.com/9C0dJ7f.png", word: "Circle" }, { image: "https://i.imgur.com/c6x8Y3L.png", word: "Square" },
@@ -111,34 +111,12 @@
                 { image: "https://i.imgur.com/A6j4n5f.png", word: "Police Officer" }, { image: "https://i.imgur.com/L6d5f7S.png", word: "Teacher" },
                 { image: "https://i.imgur.com/k9v4e7Z.png", word: "Astronaut" }, { image: "https://i.imgur.com/t3R6g8X.png", word: "Chef" },
                 { image: "https://i.imgur.com/yQ9t8eO.png", word: "Farmer" }
-            ],
-            "Human Body": [
-                { image: "https://i.imgur.com/2Q4E7p5.png", word: "Eyes" }, { image: "https://i.imgur.com/w2Y3n6f.png", word: "Nose" },
-                { image: "https://i.imgur.com/r8t7O5e.png", word: "Mouth" }, { image: "https://i.imgur.com/A7j5n6g.png", word: "Ears" },
-                { image: "https://i.imgur.com/L7d6f8T.png", word: "Hands" }, { image: "https://i.imgur.com/k0v5e8Z.png", word: "Feet" },
-                { image: "https://i.imgur.com/t4R7g9X.png", word: "Hair" }
-            ],
-            "Weather": [
-                { image: "https://i.imgur.com/3fP5o7d.png", word: "Sunny" }, { image: "https://i.imgur.com/9gY8w4p.png", word: "Cloudy" },
-                { image: "https://i.imgur.com/xR9z7h6.png", word: "Rainy" }, { image: "https://i.imgur.com/8R8p7o2.png", word: "Snowy" },
-                { image: "https://i.imgur.com/j2z6t8W.png", word: "Windy" }, { image: "https://i.imgur.com/t5S7y9c.png", word: "Stormy" }
-            ],
-            "Kitchen": [
-                { image: "https://i.imgur.com/3hV6m7e.png", word: "Spoon" }, { image: "https://i.imgur.com/9hZ9x5q.png", word: "Fork" },
-                { image: "https://i.imgur.com/xT0a8i7.png", word: "Plate" }, { image: "https://i.imgur.com/8S9p8o3.png", word: "Cup" },
-                { image: "https://i.imgur.com/j3z7u9X.png", word: "Knife" }, { image: "https://i.imgur.com/t6T8z0d.png", word: "Bowl" }
-            ],
-             "Space": [
-                { image: "https://i.imgur.com/3fQ4o6c.png", word: "Sun" }, { image: "https://i.imgur.com/9gV7x3p.png", word: "Moon" },
-                { image: "https://i.imgur.com/xR8y6h5.png", word: "Earth" }, { image: "https://i.imgur.com/8Q7p6o1.png", word: "Star" },
-                { image: "https://i.imgur.com/j1z5t7V.png", word: "Rocket" }, { image: "https://i.imgur.com/t4R6y8b.png", word: "Alien" }
             ]
         };
 
         let currentCategory = Object.keys(decks)[0];
         let currentCardIndex = 0;
         const synth = window.speechSynthesis;
-
         const flashcard = document.getElementById('flashcard');
         const cardImage = document.getElementById('card-image');
         const cardWord = document.getElementById('card-word');
@@ -146,7 +124,6 @@
 
         function initializeApp() {
             for (const category in decks) {
-                if (decks[category].length === 0) continue; // Skip empty categories
                 const button = document.createElement('button');
                 button.id = `btn-${category.replace(/[^a-zA-Z0-9]/g, '-')}`;
                 button.textContent = category;
@@ -157,7 +134,6 @@
             document.querySelector('.category-btn').classList.add('active');
             showCard(currentCardIndex);
         }
-
         function changeCategory(newCategory) {
             currentCategory = newCategory;
             currentCardIndex = 0;
@@ -165,44 +141,35 @@
             document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(`btn-${newCategory.replace(/[^a-zA-Z0-9]/g, '-')}`).classList.add('active');
         }
-
         function showCard(index) {
             flashcard.classList.remove('is-flipped');
             const currentDeck = decks[currentCategory];
-            if (currentDeck && currentDeck[index]) {
-                cardImage.src = currentDeck[index].image;
-                cardWord.textContent = currentDeck[index].word;
-            }
+            cardImage.src = currentDeck[index].image;
+            cardWord.textContent = currentDeck[index].word;
         }
-        
         function speakWord() {
             if (synth.speaking) { synth.cancel(); }
-            const wordToSpeak = decks[currentCategory][currentCardIndex].word;
-            const utterance = new SpeechSynthesisUtterance(wordToSpeak);
+            const utterance = new SpeechSynthesisUtterance(decks[currentCategory][currentCardIndex].word);
             utterance.lang = 'en-US';
             utterance.rate = 0.9;
             synth.speak(utterance);
         }
-
         function flipCard() {
             flashcard.classList.toggle('is-flipped');
             if (flashcard.classList.contains('is-flipped')) {
                 setTimeout(speakWord, 300);
             }
         }
-
         function nextCard() {
-            const currentDeck = decks[currentCategory];
-            currentCardIndex = (currentCardIndex + 1) % currentDeck.length;
+            const deck = decks[currentCategory];
+            currentCardIndex = (currentCardIndex + 1) % deck.length;
             showCard(currentCardIndex);
         }
-
         function prevCard() {
-            const currentDeck = decks[currentCategory];
-            currentCardIndex = (currentCardIndex - 1 + currentDeck.length) % currentDeck.length;
+            const deck = decks[currentCategory];
+            currentCardIndex = (currentCardIndex - 1 + deck.length) % deck.length;
             showCard(currentCardIndex);
         }
-
         initializeApp();
     </script>
 </body>

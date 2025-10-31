@@ -6,171 +6,228 @@
     <title>Preschool Flashcards</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #e0f7fa; /* A soft, friendly light blue */
-            background-image: radial-gradient(#ffffff 1px, transparent 1px);
-            background-size: 15px 15px;
+            font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow: hidden;
         }
-        .flashcard { perspective: 1000px; }
-        .card-face { backface-visibility: hidden; transition: transform 0.6s; transform-style: preserve-3d; }
-        .card-back { transform: rotateY(180deg); }
-        .flashcard.is-flipped .card-front { transform: rotateY(-180deg); }
-        .flashcard.is-flipped .card-back { transform: rotateY(0deg); }
-        .category-btn.active { background-color: #2563EB; color: white; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
-        .speaker-icon { cursor: pointer; transition: transform 0.2s; }
-        .speaker-icon:hover { transform: scale(1.1); }
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+        .sidebar {
+            width: 300px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            overflow-y: auto;
+            border-right: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+        .category-btn, .control-btn {
+            border-radius: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            color: white;
+            border: none;
+        }
+        .category-btn {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        .category-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+        .flashcard-container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+        .flashcard-image {
+            width: 100%;
+            height: 350px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 180px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border: 3px solid #ddd;
+            overflow: hidden;
+        }
+        .flashcard-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .flashcard-name {
+            font-size: 2.5em;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        .control-btn {
+            padding: 15px 25px;
+            font-size: 1.1em;
+        }
+        .btn-prev { background: #ff6b6b; }
+        .btn-next { background: #51cf66; }
+        .btn-speak { background: #4dabf7; }
     </style>
 </head>
-<body class="w-screen h-screen overflow-hidden">
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <h2 class="text-white text-2xl font-bold text-center mb-4">Categories</h2>
+            
+            <!-- NEW: Search Bar -->
+            <div class="mb-6">
+                <input type="text" id="search-input" class="w-full p-3 rounded-lg border-2 border-transparent focus:border-blue-400 focus:outline-none" placeholder="Search for any picture...">
+                <button onclick="searchPicture()" class="w-full mt-2 p-3 bg-green-500 hover:bg-green-600 text-white font-bold rounded-lg transition">Search</button>
+            </div>
 
-    <div class="flex h-full">
-        <!-- Left Column: Categories -->
-        <aside class="w-1/4 bg-white/80 backdrop-blur-sm p-4 overflow-y-auto shadow-lg">
-            <h2 class="text-2xl font-bold text-gray-700 mb-4 text-center">Categories</h2>
-            <div id="category-buttons" class="space-y-2">
-                <!-- Buttons Generated Here -->
+            <div id="categories">
+                <button class="category-btn" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);" onclick="showCategory('wild')">🦁 Wild Animals</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);" onclick="showCategory('pets')">🐕 Pets</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);" onclick="showCategory('fruits')">🍎 Fruits</button>
+                 <button class="category-btn" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);" onclick="showCategory('vegetables')">🥕 Vegetables</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);" onclick="showCategory('transport')">🚗 Transport</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);" onclick="showCategory('colors')">🎨 Colors</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);" onclick="showCategory('numbers')">🔢 Numbers</button>
             </div>
         </aside>
 
-        <!-- Right Column: Flashcard -->
-        <main class="flex-1 flex flex-col items-center justify-center p-6">
-            <div class="w-full max-w-xl">
-                <div id="flashcard" class="flashcard w-full h-96 rounded-2xl shadow-2xl cursor-pointer mb-6" onclick="flipCard()">
-                    <div class="relative w-full h-full">
-                        <div class="card-face card-front absolute w-full h-full bg-white rounded-2xl flex items-center justify-center overflow-hidden">
-                            <img id="card-image" src="" alt="Flashcard Image" class="w-full h-full object-contain p-5">
-                        </div>
-                        <div class="card-face card-back absolute w-full h-full bg-blue-500 text-white rounded-2xl flex flex-col items-center justify-center">
-                            <h2 id="card-word" class="text-7xl font-bold"></h2>
-                            <i class="fas fa-volume-up speaker-icon text-4xl mt-4" onclick="event.stopPropagation(); speakWord();"></i>
-                        </div>
-                    </div>
+        <main class="main-content">
+            <div class="flashcard-container">
+                <div class="flashcard-image" id="flashcard-image-container">
+                    <!-- Content (emoji or image) will be set here -->
                 </div>
-
-                <div class="flex justify-between items-center">
-                    <button onclick="prevCard()" class="bg-white hover:bg-gray-100 text-gray-800 font-bold py-4 px-8 rounded-full transition shadow-lg">&larr; Previous</button>
-                    <button onclick="nextCard()" class="bg-white hover:bg-gray-100 text-gray-800 font-bold py-4 px-8 rounded-full transition shadow-lg">Next &rarr;</button>
+                <div class="flashcard-name" id="flashcard-name">Select a category or search!</div>
+                <div class="counter" id="counter" style="font-size: 1.2em; color: #666; margin-top: 15px;"></div>
+                
+                <div class="controls mt-4">
+                    <button id="prev-btn" class="control-btn btn-prev" onclick="prevCard()">⬅️ Previous</button>
+                    <button class="control-btn btn-speak" onclick="speakCard()">🔊 Say It!</button>
+                    <button id="next-btn" class="control-btn btn-next" onclick="nextCard()">Next ➡️</button>
                 </div>
             </div>
         </main>
     </div>
 
     <script>
-        // --- The Flashcard Library ---
-        // New, permanent, and reliable image links from Imgur.
-        const decks = {
-            "Wild Animals": [
-                { image: "https://i.imgur.com/3hXAmP2.png", word: "Lion" }, { image: "https://i.imgur.com/s0m5Iqg.png", word: "Tiger" },
-                { image: "https://i.imgur.com/CN23a5n.png", word: "Elephant" }, { image: "https://i.imgur.com/NqA1k0n.png", word: "Giraffe" },
-                { image: "https://i.imgur.com/GzL62pG.png", word: "Monkey" }, { image: "https://i.imgur.com/rS2n5qa.png", word: "Zebra" },
-                { image: "https://i.imgur.com/1Gv2x72.png", word: "Bear" }, { image: "https://i.imgur.com/FBlGfmc.png", word: "Hippo" },
-                { image: "https://i.imgur.com/jI9n1Y5.png", word: "Kangaroo" }, { image: "https://i.imgur.com/2Y5X5Xq.png", word: "Panda" }
-            ],
-            "Pets": [
-                { image: "https://i.imgur.com/v1h3j3a.png", word: "Dog" }, { image: "https://i.imgur.com/t4s7k9P.png", word: "Cat" },
-                { image: "https://i.imgur.com/t2eL0z5.png", word: "Fish" }, { image: "https://i.imgur.com/8Q5F5t1.png", word: "Bird" },
-                { image: "https://i.imgur.com/M5b1tV9.png", word: "Hamster" }, { image: "https://i.imgur.com/xO43t1f.png", word: "Rabbit" },
-                { image: "https://i.imgur.com/7j4Z6y1.png", word: "Turtle" }
-            ],
-            "Fruits & Veggies": [
-                { image: "https://i.imgur.com/o2v8M6R.png", word: "Apple" }, { image: "https://i.imgur.com/tL8YQ3d.png", word: "Banana" },
-                { image: "https://i.imgur.com/yTqB1M0.png", word: "Strawberry" }, { image: "https://i.imgur.com/J3x2jY6.png", word: "Orange" },
-                { image: "https://i.imgur.com/5l3n6xH.png", word: "Grapes" }, { image: "https://i.imgur.com/2z8b2M6.png", word: "Carrot" },
-                { image: "https://i.imgur.com/8z6O8d3.png", word: "Broccoli" }, { image: "https://i.imgur.com.com/9j6n3kG.png", word: "Tomato" }
-            ],
-            "Shapes": [
-                { image: "https://i.imgur.com/9C0dJ7f.png", word: "Circle" }, { image: "https://i.imgur.com/c6x8Y3L.png", word: "Square" },
-                { image: "https://i.imgur.com/A9n3l8b.png", word: "Triangle" }, { image: "https://i.imgur.com/vH3s9mK.png", word: "Star" },
-                { image: "https://i.imgur.com/tW4p2z1.png", word: "Heart" }, { image: "https://i.imgur.com/O1f4a4p.png", word: "Rectangle" },
-                { image: "https://i.imgur.com/yF5R8dG.png", word: "Oval" }, { image: "https://i.imgur.com/xQ6E8z9.png", word: "Diamond" }
-            ],
-            "Colors": [
-                { image: "https://i.imgur.com/UfG5n3v.png", word: "Red" }, { image: "https://i.imgur.com/Q3E5p5p.png", word: "Blue" },
-                { image: "https://i.imgur.com/f2t5i2l.png", word: "Green" }, { image: "https://i.imgur.com/D4s6z4r.png", word: "Yellow" },
-                { image: "https://i.imgur.com/8S1g5gB.png", word: "Orange" }, { image: "https://i.imgur.com/xQ7z9tB.png", word: "Purple" },
-                { image: "https://i.imgur.com/g8O5n7E.png", word: "Pink" }, { image: "https://i.imgur.com/c4t3k1F.png", word: "Black" }
-            ],
-            "Numbers 1-10": [
-                { image: "https://i.imgur.com/mZ3h4n0.png", word: "One" }, { image: "https://i.imgur.com/a9k8s2P.png", word: "Two" },
-                { image: "https://i.imgur.com/b7c6d5E.png", word: "Three" }, { image: "https://i.imgur.com/d4e3f2A.png", word: "Four" },
-                { image: "https://i.imgur.com/e5f2g1B.png", word: "Five" }, { image: "https://i.imgur.com/f6g1h0C.png", word: "Six" },
-                { image: "https://i.imgur.com/g7h0i9D.png", word: "Seven" }, { image: "https://i.imgur.com/h8i9j8E.png", word: "Eight" },
-                { image: "https://i.imgur.com/i9j8k7F.png", word: "Nine" }, { image: "https://i.imgur.com/j0k7l6G.png", word: "Ten" }
-            ],
-            "Transport": [
-                { image: "https://i.imgur.com/5fO4n6d.png", word: "Car" }, { image: "https://i.imgur.com/9fX7w3p.png", word: "Bus" },
-                { image: "https://i.imgur.com/xQ8z6h5.png", word: "Airplane" }, { image: "https://i.imgur.com/8Q7p6o1.png", word: "Train" },
-                { image: "https://i.imgur.com/j1z5t7V.png", word: "Boat" }, { image: "https://i.imgur.com/3Y4W8z1.png", word: "Bicycle" },
-                { image: "https://i.imgur.com/t4R6y8b.png", word: "Helicopter" }
-            ],
-            "Careers": [
-                { image: "https://i.imgur.com/e2Y3m6d.png", word: "Doctor" }, { image: "https://i.imgur.com/r7w8O4f.png", word: "Firefighter" },
-                { image: "https://i.imgur.com/A6j4n5f.png", word: "Police Officer" }, { image: "https://i.imgur.com/L6d5f7S.png", word: "Teacher" },
-                { image: "https://i.imgur.com/k9v4e7Z.png", word: "Astronaut" }, { image: "https://i.imgur.com/t3R6g8X.png", word: "Chef" },
-                { image: "https://i.imgur.com/yQ9t8eO.png", word: "Farmer" }
-            ]
+        const flashcards = {
+            wild: [ {name: 'Lion', emoji: '🦁'}, {name: 'Tiger', emoji: '🐯'}, {name: 'Elephant', emoji: '🐘'}, {name: 'Giraffe', emoji: '🦒'}, {name: 'Zebra', emoji: '🦓'}, {name: 'Monkey', emoji: '🐒'} ],
+            pets: [ {name: 'Dog', emoji: '🐕'}, {name: 'Cat', emoji: '🐈'}, {name: 'Rabbit', emoji: '🐇'}, {name: 'Hamster', emoji: '🐹'}, {name: 'Fish', emoji: '🐠'}, {name: 'Bird', emoji: '🐦'} ],
+            fruits: [ {name: 'Apple', emoji: '🍎'}, {name: 'Banana', emoji: '🍌'}, {name: 'Orange', emoji: '🍊'}, {name: 'Grapes', emoji: '🍇'}, {name: 'Strawberry', emoji: '🍓'}, {name: 'Watermelon', emoji: '🍉'} ],
+            vegetables: [ {name: 'Carrot', emoji: '🥕'}, {name: 'Broccoli', emoji: '🥦'}, {name: 'Tomato', emoji: '🍅'}, {name: 'Corn', emoji: '🌽'}, {name: 'Cucumber', emoji: '🥒'}, {name: 'Lettuce', emoji: '🥬'} ],
+            transport: [ {name: 'Car', emoji: '🚗'}, {name: 'Bus', emoji: '🚌'}, {name: 'Train', emoji: '🚂'}, {name: 'Airplane', emoji: '✈️'}, {name: 'Helicopter', emoji: '🚁'}, {name: 'Boat', emoji: '⛵'} ],
+            colors: [ {name: 'Red', emoji: '🔴'}, {name: 'Blue', emoji: '🔵'}, {name: 'Yellow', emoji: '🟡'}, {name: 'Green', emoji: '🟢'}, {name: 'Orange', emoji: '🟠'}, {name: 'Purple', emoji: '🟣'} ],
+            numbers: Array.from({length: 10}, (_, i) => ({name: `${i + 1}`, emoji: `${i + 1}`}))
         };
 
-        let currentCategory = Object.keys(decks)[0];
-        let currentCardIndex = 0;
-        const synth = window.speechSynthesis;
-        const flashcard = document.getElementById('flashcard');
-        const cardImage = document.getElementById('card-image');
-        const cardWord = document.getElementById('card-word');
-        const categoryButtonsContainer = document.getElementById('category-buttons');
+        let currentCategory = '';
+        let currentIndex = 0;
+        let currentWord = 'Welcome!';
 
-        function initializeApp() {
-            for (const category in decks) {
-                const button = document.createElement('button');
-                button.id = `btn-${category.replace(/[^a-zA-Z0-9]/g, '-')}`;
-                button.textContent = category;
-                button.className = 'category-btn w-full text-left bg-white hover:bg-gray-100 text-gray-800 font-semibold py-3 px-4 rounded-lg transition shadow';
-                button.onclick = () => changeCategory(category);
-                categoryButtonsContainer.appendChild(button);
+        const imageContainer = document.getElementById('flashcard-image-container');
+        const nameContainer = document.getElementById('flashcard-name');
+        const counterContainer = document.getElementById('counter');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const searchInput = document.getElementById('search-input');
+
+        function showCategory(category) {
+            currentCategory = category;
+            currentIndex = 0;
+            prevBtn.style.display = 'block';
+            nextBtn.style.display = 'block';
+            updateCard();
+        }
+
+        function updateCard() {
+            const cards = flashcards[currentCategory];
+            const card = cards[currentIndex];
+            imageContainer.innerHTML = `<span style="font-size: 180px;">${card.emoji}</span>`;
+            nameContainer.textContent = card.name;
+            currentWord = card.name;
+            counterContainer.textContent = `${currentIndex + 1} of ${cards.length}`;
+            speakCard(false); // Don't speak automatically unless user clicks
+        }
+        
+        function searchPicture() {
+            const searchTerm = searchInput.value.trim();
+            if (!searchTerm) {
+                alert("Please enter a word to search for.");
+                return;
             }
-            document.querySelector('.category-btn').classList.add('active');
-            showCard(currentCardIndex);
+            
+            // Unsplash Source provides random high-quality photos based on keywords
+            const imageUrl = `https://source.unsplash.com/600x600/?${searchTerm}`;
+            
+            imageContainer.innerHTML = `<img src="${imageUrl}" alt="${searchTerm}" class="w-full h-full object-cover">`;
+            nameContainer.textContent = searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1);
+            currentWord = searchTerm;
+            counterContainer.textContent = "Search Result";
+            
+            // Hide next/prev buttons for search results
+            prevBtn.style.display = 'none';
+            nextBtn.style.display = 'none';
+            
+            speakCard();
         }
-        function changeCategory(newCategory) {
-            currentCategory = newCategory;
-            currentCardIndex = 0;
-            showCard(currentCardIndex);
-            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`btn-${newCategory.replace(/[^a-zA-Z0-9]/g, '-')}`).classList.add('active');
-        }
-        function showCard(index) {
-            flashcard.classList.remove('is-flipped');
-            const currentDeck = decks[currentCategory];
-            cardImage.src = currentDeck[index].image;
-            cardWord.textContent = currentDeck[index].word;
-        }
-        function speakWord() {
-            if (synth.speaking) { synth.cancel(); }
-            const utterance = new SpeechSynthesisUtterance(decks[currentCategory][currentCardIndex].word);
-            utterance.lang = 'en-US';
-            utterance.rate = 0.9;
-            synth.speak(utterance);
-        }
-        function flipCard() {
-            flashcard.classList.toggle('is-flipped');
-            if (flashcard.classList.contains('is-flipped')) {
-                setTimeout(speakWord, 300);
+
+        searchInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                searchPicture();
             }
-        }
+        });
+
         function nextCard() {
-            const deck = decks[currentCategory];
-            currentCardIndex = (currentCardIndex + 1) % deck.length;
-            showCard(currentCardIndex);
+            const cards = flashcards[currentCategory];
+            if (!cards) return;
+            currentIndex = (currentIndex + 1) % cards.length;
+            updateCard();
         }
+
         function prevCard() {
-            const deck = decks[currentCategory];
-            currentCardIndex = (currentCardIndex - 1 + deck.length) % deck.length;
-            showCard(currentCardIndex);
+            const cards = flashcards[currentCategory];
+            if (!cards) return;
+            currentIndex = (currentIndex - 1 + cards.length) % cards.length;
+            updateCard();
         }
-        initializeApp();
+
+        function speakCard(forceSpeak = true) {
+            if (forceSpeak && 'speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(currentWord);
+                utterance.rate = 0.8;
+                utterance.pitch = 1.2;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
     </script>
 </body>
 </html>

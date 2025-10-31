@@ -14,101 +14,145 @@
         body {
             font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            height: 100vh;
+            overflow: hidden; /* Prevent scrolling of the whole page */
+        }
+        
+        .app-container {
+            display: flex;
+            height: 100%;
+        }
+
+        /* --- Left Sidebar for Categories & Search --- */
+        .sidebar {
+            width: 300px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
         }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        h1 {
+
+        .sidebar h2 {
             text-align: center;
             color: white;
-            font-size: 3em;
-            margin-bottom: 30px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
         }
-        
+
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            font-size: 1em;
+            margin-bottom: 10px;
+        }
+
+        .search-container button {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            background: #51cf66;
+            transition: all 0.2s;
+        }
+        .search-container button:hover {
+            background: #40c057;
+        }
+
         .categories {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
+            flex-grow: 1;
+            overflow-y: auto; /* Allow categories to scroll if they overflow */
+            margin-right: -10px;
+            padding-right: 10px;
         }
         
         .category-btn {
-            padding: 20px;
-            font-size: 1.2em;
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
             font-weight: bold;
             border: none;
-            border-radius: 15px;
+            border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s;
             box-shadow: 0 4px 6px rgba(0,0,0,0.2);
             color: white;
+            text-align: left;
         }
         
         .category-btn:hover {
-            transform: translateY(-5px);
+            transform: scale(1.03);
             box-shadow: 0 6px 12px rgba(0,0,0,0.3);
         }
-        
-        .category-btn:active {
-            transform: translateY(-2px);
+
+        /* --- Main Content Area for Flashcard --- */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
         }
         
         .flashcard-container {
             background: white;
             border-radius: 20px;
-            padding: 40px;
+            padding: 30px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             text-align: center;
-            display: none;
-        }
-        
-        .flashcard-container.active {
-            display: block;
-        }
-        
-        .flashcard {
-            max-width: 600px;
-            margin: 0 auto;
+            width: 100%;
+            max-width: 450px; /* MADE SMALLER */
         }
         
         .flashcard-image {
             width: 100%;
-            max-width: 400px;
-            height: 400px;
-            margin: 0 auto 30px;
+            height: 300px; /* MADE SMALLER */
+            margin: 0 auto 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 200px;
+            font-size: 150px; /* MADE SMALLER */
             background: #f8f9fa;
             border-radius: 15px;
             border: 3px solid #ddd;
+            overflow: hidden;
+        }
+
+        .flashcard-image img {
+             width: 100%;
+             height: 100%;
+             object-fit: cover;
         }
         
         .flashcard-name {
-            font-size: 3em;
+            font-size: 2.5em; /* MADE SMALLER */
             color: #333;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             font-weight: bold;
         }
         
         .controls {
             display: flex;
-            gap: 15px;
+            gap: 10px;
             justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 30px;
         }
         
         .control-btn {
-            padding: 15px 30px;
-            font-size: 1.2em;
+            padding: 12px 25px; /* MADE SMALLER */
+            font-size: 1.1em;
             border: none;
             border-radius: 10px;
             cursor: pointer;
@@ -117,241 +161,153 @@
             color: white;
         }
         
-        .btn-prev {
-            background: #ff6b6b;
-        }
-        
-        .btn-next {
-            background: #51cf66;
-        }
-        
-        .btn-speak {
-            background: #4dabf7;
-        }
-        
-        .btn-back {
-            background: #868e96;
-        }
+        .btn-prev { background: #ff6b6b; }
+        .btn-next { background: #51cf66; }
+        .btn-speak { background: #4dabf7; }
         
         .control-btn:hover {
             transform: scale(1.05);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
         
         .counter {
-            font-size: 1.5em;
+            font-size: 1.2em;
             color: #666;
             margin-top: 20px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🌈 Preschool Flashcards 🌈</h1>
+    <div class="app-container">
+        <aside class="sidebar">
+            <h2>Categories</h2>
+            <div class="search-container">
+                 <input type="text" id="search-input" placeholder="Search any word...">
+                 <button onclick="searchPicture()">Search</button>
+            </div>
+            <div class="categories" id="categories">
+                <button class="category-btn" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);" onclick="showCategory('wild')">🦁 Wild Animals</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);" onclick="showCategory('pets')">🐕 Pets</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);" onclick="showCategory('space')">🚀 Space</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);" onclick="showCategory('body')">👤 Human Body</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);" onclick="showCategory('colors')">🎨 Colors</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);" onclick="showCategory('shapes')">⭐ Shapes</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);" onclick="showCategory('numbers')">🔢 Numbers 1-100</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);" onclick="showCategory('polygons')">📐 Polygons</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #ff6e7f 0%, #bfe9ff 100%);" onclick="showCategory('careers')">👨‍⚕️ Careers</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);" onclick="showCategory('transport')">🚗 Transport</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);" onclick="showCategory('family')">👨‍👩‍👧 Family</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);" onclick="showCategory('seasons')">🍂 Seasons</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);" onclick="showCategory('weather')">⛅ Weather</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);" onclick="showCategory('restaurant')">🍔 Restaurant</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);" onclick="showCategory('kitchen')">🍳 Kitchen</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);" onclick="showCategory('vegetables')">🥕 Vegetables</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);" onclick="showCategory('fruits')">🍎 Fruits</button>
+            </div>
+        </aside>
         
-        <div class="categories" id="categories">
-            <button class="category-btn" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);" onclick="showCategory('wild')">🦁 Wild Animals</button>
-            <button class="category-btn" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);" onclick="showCategory('pets')">🐕 Pets</button>
-            <button class="category-btn" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);" onclick="showCategory('space')">🚀 Space</button>
-            <button class="category-btn" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);" onclick="showCategory('body')">👤 Human Body</button>
-            <button class="category-btn" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);" onclick="showCategory('colors')">🎨 Colors</button>
-            <button class="category-btn" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);" onclick="showCategory('shapes')">⭐ Shapes</button>
-            <button class="category-btn" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);" onclick="showCategory('numbers')">🔢 Numbers 1-100</button>
-            <button class="category-btn" style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);" onclick="showCategory('polygons')">📐 Polygons</button>
-            <button class="category-btn" style="background: linear-gradient(135deg, #ff6e7f 0%, #bfe9ff 100%);" onclick="showCategory('careers')">👨‍⚕️ Careers</button>
-            <button class="category-btn" style="background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);" onclick="showCategory('transport')">🚗 Transport</button>
-            <button class="category-btn" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);" onclick="showCategory('family')">👨‍👩‍👧 Family</button>
-            <button class="category-btn" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);" onclick="showCategory('seasons')">🍂 Seasons</button>
-            <button class="category-btn" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);" onclick="showCategory('weather')">⛅ Weather</button>
-            <button class="category-btn" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);" onclick="showCategory('restaurant')">🍔 Restaurant</button>
-            <button class="category-btn" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);" onclick="showCategory('kitchen')">🍳 Kitchen</button>
-            <button class="category-btn" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);" onclick="showCategory('vegetables')">🥕 Vegetables</button>
-            <button class="category-btn" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);" onclick="showCategory('fruits')">🍎 Fruits</button>
-        </div>
-        
-        <div class="flashcard-container" id="flashcardContainer">
-            <div class="flashcard">
-                <div class="flashcard-image" id="flashcardImage"></div>
-                <div class="flashcard-name" id="flashcardName"></div>
+        <main class="main-content">
+            <div class="flashcard-container" id="flashcardContainer">
+                <div class="flashcard-image" id="flashcardImage">Welcome!</div>
+                <div class="flashcard-name" id="flashcardName">Select a category or search</div>
                 <div class="counter" id="counter"></div>
+                
+                <div class="controls">
+                    <button id="prevBtn" class="control-btn btn-prev" onclick="prevCard()">⬅️ Previous</button>
+                    <button class="control-btn btn-speak" onclick="speakCurrentWord()">🔊 Say It!</button>
+                    <button id="nextBtn" class="control-btn btn-next" onclick="nextCard()">Next ➡️</button>
+                </div>
             </div>
-            
-            <div class="controls">
-                <button class="control-btn btn-back" onclick="backToCategories()">🏠 Back</button>
-                <button class="control-btn btn-prev" onclick="prevCard()">⬅️ Previous</button>
-                <button class="control-btn btn-speak" onclick="speakCard()">🔊 Say It!</button>
-                <button class="control-btn btn-next" onclick="nextCard()">Next ➡️</button>
-            </div>
-        </div>
+        </main>
     </div>
 
     <script>
         const flashcards = {
-            wild: [
-                {name: 'Lion', emoji: '🦁'}, {name: 'Tiger', emoji: '🐯'}, {name: 'Elephant', emoji: '🐘'},
-                {name: 'Giraffe', emoji: '🦒'}, {name: 'Zebra', emoji: '🦓'}, {name: 'Monkey', emoji: '🐒'},
-                {name: 'Gorilla', emoji: '🦍'}, {name: 'Bear', emoji: '🐻'}, {name: 'Panda', emoji: '🐼'},
-                {name: 'Fox', emoji: '🦊'}, {name: 'Wolf', emoji: '🐺'}, {name: 'Deer', emoji: '🦌'},
-                {name: 'Hippopotamus', emoji: '🦛'}, {name: 'Rhinoceros', emoji: '🦏'}, {name: 'Crocodile', emoji: '🐊'},
-                {name: 'Snake', emoji: '🐍'}, {name: 'Lizard', emoji: '🦎'}, {name: 'Turtle', emoji: '🐢'},
-                {name: 'Kangaroo', emoji: '🦘'}, {name: 'Koala', emoji: '🐨'}
-            ],
-            pets: [
-                {name: 'Dog', emoji: '🐕'}, {name: 'Cat', emoji: '🐈'}, {name: 'Rabbit', emoji: '🐇'},
-                {name: 'Hamster', emoji: '🐹'}, {name: 'Guinea Pig', emoji: '🐹'}, {name: 'Fish', emoji: '🐠'},
-                {name: 'Bird', emoji: '🐦'}, {name: 'Parrot', emoji: '🦜'}, {name: 'Turtle', emoji: '🐢'},
-                {name: 'Goldfish', emoji: '🐟'}, {name: 'Mouse', emoji: '🐭'}, {name: 'Puppy', emoji: '🐶'},
-                {name: 'Kitten', emoji: '🐱'}, {name: 'Ferret', emoji: '🦡'}, {name: 'Hedgehog', emoji: '🦔'},
-                {name: 'Chinchilla', emoji: '🐭'}, {name: 'Gerbil', emoji: '🐁'}, {name: 'Canary', emoji: '🐤'},
-                {name: 'Budgie', emoji: '🦜'}, {name: 'Cockatiel', emoji: '🦜'}
-            ],
-            space: [
-                {name: 'Sun', emoji: '☀️'}, {name: 'Moon', emoji: '🌙'}, {name: 'Star', emoji: '⭐'},
-                {name: 'Earth', emoji: '🌍'}, {name: 'Mars', emoji: '🔴'}, {name: 'Saturn', emoji: '🪐'},
-                {name: 'Rocket', emoji: '🚀'}, {name: 'Astronaut', emoji: '👨‍🚀'}, {name: 'Alien', emoji: '👽'},
-                {name: 'UFO', emoji: '🛸'}, {name: 'Comet', emoji: '☄️'}, {name: 'Galaxy', emoji: '🌌'},
-                {name: 'Telescope', emoji: '🔭'}, {name: 'Satellite', emoji: '🛰️'}, {name: 'Meteor', emoji: '💫'},
-                {name: 'Planet', emoji: '🌎'}, {name: 'Space Station', emoji: '🛰️'}, {name: 'Shooting Star', emoji: '🌠'},
-                {name: 'Full Moon', emoji: '🌕'}, {name: 'Crescent Moon', emoji: '🌙'}
-            ],
-            body: [
-                {name: 'Head', emoji: '👤'}, {name: 'Eyes', emoji: '👀'}, {name: 'Nose', emoji: '👃'},
-                {name: 'Mouth', emoji: '👄'}, {name: 'Ears', emoji: '👂'}, {name: 'Hands', emoji: '✋'},
-                {name: 'Feet', emoji: '🦶'}, {name: 'Legs', emoji: '🦵'}, {name: 'Arms', emoji: '💪'},
-                {name: 'Fingers', emoji: '👆'}, {name: 'Toes', emoji: '🦶'}, {name: 'Hair', emoji: '💇'},
-                {name: 'Teeth', emoji: '🦷'}, {name: 'Tongue', emoji: '👅'}, {name: 'Heart', emoji: '❤️'},
-                {name: 'Brain', emoji: '🧠'}, {name: 'Stomach', emoji: '🫃'}, {name: 'Bones', emoji: '🦴'},
-                {name: 'Shoulders', emoji: '🫱'}, {name: 'Knees', emoji: '🦵'}
-            ],
-            colors: [
-                {name: 'Red', emoji: '🔴'}, {name: 'Blue', emoji: '🔵'}, {name: 'Yellow', emoji: '🟡'},
-                {name: 'Green', emoji: '🟢'}, {name: 'Orange', emoji: '🟠'}, {name: 'Purple', emoji: '🟣'},
-                {name: 'Pink', emoji: '🩷'}, {name: 'Brown', emoji: '🟤'}, {name: 'Black', emoji: '⚫'},
-                {name: 'White', emoji: '⚪'}, {name: 'Gray', emoji: '⚫'}, {name: 'Gold', emoji: '🟡'},
-                {name: 'Silver', emoji: '⚪'}, {name: 'Turquoise', emoji: '🩵'}, {name: 'Maroon', emoji: '🟤'},
-                {name: 'Navy', emoji: '🔵'}, {name: 'Lime', emoji: '🟢'}, {name: 'Magenta', emoji: '🟣'},
-                {name: 'Cyan', emoji: '🩵'}, {name: 'Beige', emoji: '🟤'}
-            ],
-            shapes: [
-                {name: 'Circle', emoji: '⭕'}, {name: 'Square', emoji: '🟦'}, {name: 'Triangle', emoji: '🔺'},
-                {name: 'Rectangle', emoji: '▭'}, {name: 'Star', emoji: '⭐'}, {name: 'Heart', emoji: '❤️'},
-                {name: 'Diamond', emoji: '💠'}, {name: 'Oval', emoji: '🥚'}, {name: 'Pentagon', emoji: '⬟'},
-                {name: 'Hexagon', emoji: '⬡'}, {name: 'Octagon', emoji: '🛑'}, {name: 'Crescent', emoji: '🌙'},
-                {name: 'Cross', emoji: '➕'}, {name: 'Arrow', emoji: '➡️'}, {name: 'Cube', emoji: '🧊'},
-                {name: 'Sphere', emoji: '⚽'}, {name: 'Cone', emoji: '🍦'}, {name: 'Cylinder', emoji: '🥫'},
-                {name: 'Pyramid', emoji: '🔺'}, {name: 'Parallelogram', emoji: '▱'}
-            ],
+            wild: [ {name: 'Lion', emoji: '🦁'}, {name: 'Tiger', emoji: '🐯'}, {name: 'Elephant', emoji: '🐘'}, {name: 'Giraffe', emoji: '🦒'}, {name: 'Zebra', emoji: '🦓'}, {name: 'Monkey', emoji: '🐒'}, {name: 'Gorilla', emoji: '🦍'}, {name: 'Bear', emoji: '🐻'}, {name: 'Panda', emoji: '🐼'}, {name: 'Fox', emoji: '🦊'}, {name: 'Wolf', emoji: '🐺'}, {name: 'Deer', emoji: '🦌'}, {name: 'Hippopotamus', emoji: '🦛'}, {name: 'Rhinoceros', emoji: '🦏'}, {name: 'Crocodile', emoji: '🐊'}, {name: 'Snake', emoji: '🐍'}, {name: 'Lizard', emoji: '🦎'}, {name: 'Turtle', emoji: '🐢'}, {name: 'Kangaroo', emoji: '🦘'}, {name: 'Koala', emoji: '🐨'} ],
+            pets: [ {name: 'Dog', emoji: '🐕'}, {name: 'Cat', emoji: '🐈'}, {name: 'Rabbit', emoji: '🐇'}, {name: 'Hamster', emoji: '🐹'}, {name: 'Guinea Pig', emoji: '🐹'}, {name: 'Fish', emoji: '🐠'}, {name: 'Bird', emoji: '🐦'}, {name: 'Parrot', emoji: '🦜'}, {name: 'Turtle', emoji: '🐢'}, {name: 'Goldfish', emoji: '🐟'}, {name: 'Mouse', emoji: '🐭'}, {name: 'Puppy', emoji: '🐶'}, {name: 'Kitten', emoji: '🐱'}, {name: 'Ferret', emoji: '🦡'}, {name: 'Hedgehog', emoji: '🦔'}, {name: 'Chinchilla', emoji: '🐭'}, {name: 'Gerbil', emoji: '🐁'}, {name: 'Canary', emoji: '🐤'}, {name: 'Budgie', emoji: '🦜'}, {name: 'Cockatiel', emoji: '🦜'} ],
+            space: [ {name: 'Sun', emoji: '☀️'}, {name: 'Moon', emoji: '🌙'}, {name: 'Star', emoji: '⭐'}, {name: 'Earth', emoji: '🌍'}, {name: 'Mars', emoji: '🔴'}, {name: 'Saturn', emoji: '🪐'}, {name: 'Rocket', emoji: '🚀'}, {name: 'Astronaut', emoji: '👨‍🚀'}, {name: 'Alien', emoji: '👽'}, {name: 'UFO', emoji: '🛸'}, {name: 'Comet', emoji: '☄️'}, {name: 'Galaxy', emoji: '🌌'}, {name: 'Telescope', emoji: '🔭'}, {name: 'Satellite', emoji: '🛰️'}, {name: 'Meteor', emoji: '💫'}, {name: 'Planet', emoji: '🌎'}, {name: 'Space Station', emoji: '🛰️'}, {name: 'Shooting Star', emoji: '🌠'}, {name: 'Full Moon', emoji: '🌕'}, {name: 'Crescent Moon', emoji: '🌙'} ],
+            body: [ {name: 'Head', emoji: '👤'}, {name: 'Eyes', emoji: '👀'}, {name: 'Nose', emoji: '👃'}, {name: 'Mouth', emoji: '👄'}, {name: 'Ears', emoji: '👂'}, {name: 'Hands', emoji: '✋'}, {name: 'Feet', emoji: '🦶'}, {name: 'Legs', emoji: '🦵'}, {name: 'Arms', emoji: '💪'}, {name: 'Fingers', emoji: '👆'}, {name: 'Toes', emoji: '🦶'}, {name: 'Hair', emoji: '💇'}, {name: 'Teeth', emoji: '🦷'}, {name: 'Tongue', emoji: '👅'}, {name: 'Heart', emoji: '❤️'}, {name: 'Brain', emoji: '🧠'}, {name: 'Stomach', emoji: '🫃'}, {name: 'Bones', emoji: '🦴'}, {name: 'Shoulders', emoji: '🫱'}, {name: 'Knees', emoji: '🦵'} ],
+            colors: [ {name: 'Red', emoji: '🔴'}, {name: 'Blue', emoji: '🔵'}, {name: 'Yellow', emoji: '🟡'}, {name: 'Green', emoji: '🟢'}, {name: 'Orange', emoji: '🟠'}, {name: 'Purple', emoji: '🟣'}, {name: 'Pink', emoji: '🩷'}, {name: 'Brown', emoji: '🟤'}, {name: 'Black', emoji: '⚫'}, {name: 'White', emoji: '⚪'}, {name: 'Gray', emoji: '⚫'}, {name: 'Gold', emoji: '🟡'}, {name: 'Silver', emoji: '⚪'}, {name: 'Turquoise', emoji: '🩵'}, {name: 'Maroon', emoji: '🟤'}, {name: 'Navy', emoji: '🔵'}, {name: 'Lime', emoji: '🟢'}, {name: 'Magenta', emoji: '🟣'}, {name: 'Cyan', emoji: '🩵'}, {name: 'Beige', emoji: '🟤'} ],
+            shapes: [ {name: 'Circle', emoji: '⭕'}, {name: 'Square', emoji: '🟦'}, {name: 'Triangle', emoji: '🔺'}, {name: 'Rectangle', emoji: '▭'}, {name: 'Star', emoji: '⭐'}, {name: 'Heart', emoji: '❤️'}, {name: 'Diamond', emoji: '💠'}, {name: 'Oval', emoji: '🥚'}, {name: 'Pentagon', emoji: '⬟'}, {name: 'Hexagon', emoji: '⬡'}, {name: 'Octagon', emoji: '🛑'}, {name: 'Crescent', emoji: '🌙'}, {name: 'Cross', emoji: '➕'}, {name: 'Arrow', emoji: '➡️'}, {name: 'Cube', emoji: '🧊'}, {name: 'Sphere', emoji: '⚽'}, {name: 'Cone', emoji: '🍦'}, {name: 'Cylinder', emoji: '🥫'}, {name: 'Pyramid', emoji: '🔺'}, {name: 'Parallelogram', emoji: '▱'} ],
             numbers: Array.from({length: 100}, (_, i) => ({name: `${i + 1}`, emoji: `${i + 1}`})),
-            polygons: [
-                {name: 'Triangle', emoji: '🔺'}, {name: 'Quadrilateral', emoji: '🟦'}, {name: 'Pentagon', emoji: '⬟'},
-                {name: 'Hexagon', emoji: '⬡'}, {name: 'Heptagon', emoji: '⬢'}, {name: 'Octagon', emoji: '🛑'},
-                {name: 'Nonagon', emoji: '⬢'}, {name: 'Decagon', emoji: '⬢'}, {name: 'Square', emoji: '🟦'},
-                {name: 'Rectangle', emoji: '▭'}, {name: 'Rhombus', emoji: '🔷'}, {name: 'Trapezoid', emoji: '▱'},
-                {name: 'Parallelogram', emoji: '▱'}, {name: 'Kite', emoji: '🪁'}, {name: 'Equilateral Triangle', emoji: '🔺'},
-                {name: 'Isosceles Triangle', emoji: '🔺'}, {name: 'Right Triangle', emoji: '📐'}, {name: 'Scalene Triangle', emoji: '🔺'},
-                {name: 'Regular Pentagon', emoji: '⬟'}, {name: 'Regular Hexagon', emoji: '⬡'}
-            ],
-            careers: [
-                {name: 'Doctor', emoji: '👨‍⚕️'}, {name: 'Nurse', emoji: '👩‍⚕️'}, {name: 'Teacher', emoji: '👨‍🏫'},
-                {name: 'Police Officer', emoji: '👮'}, {name: 'Firefighter', emoji: '👨‍🚒'}, {name: 'Chef', emoji: '👨‍🍳'},
-                {name: 'Farmer', emoji: '👨‍🌾'}, {name: 'Pilot', emoji: '👨‍✈️'}, {name: 'Astronaut', emoji: '👨‍🚀'},
-                {name: 'Engineer', emoji: '👷'}, {name: 'Artist', emoji: '👨‍🎨'}, {name: 'Musician', emoji: '👨‍🎤'},
-                {name: 'Scientist', emoji: '👨‍🔬'}, {name: 'Dentist', emoji: '🦷'}, {name: 'Veterinarian', emoji: '👨‍⚕️'},
-                {name: 'Baker', emoji: '🧑‍🍳'}, {name: 'Mail Carrier', emoji: '📬'}, {name: 'Mechanic', emoji: '🔧'},
-                {name: 'Librarian', emoji: '📚'}, {name: 'Architect', emoji: '📐'}
-            ],
-            transport: [
-                {name: 'Car', emoji: '🚗'}, {name: 'Bus', emoji: '🚌'}, {name: 'Train', emoji: '🚂'},
-                {name: 'Airplane', emoji: '✈️'}, {name: 'Helicopter', emoji: '🚁'}, {name: 'Boat', emoji: '⛵'},
-                {name: 'Ship', emoji: '🚢'}, {name: 'Bicycle', emoji: '🚲'}, {name: 'Motorcycle', emoji: '🏍️'},
-                {name: 'Truck', emoji: '🚚'}, {name: 'Taxi', emoji: '🚕'}, {name: 'Ambulance', emoji: '🚑'},
-                {name: 'Fire Truck', emoji: '🚒'}, {name: 'Police Car', emoji: '🚓'}, {name: 'Tractor', emoji: '🚜'},
-                {name: 'Rocket', emoji: '🚀'}, {name: 'Scooter', emoji: '🛴'}, {name: 'Skateboard', emoji: '🛹'},
-                {name: 'Submarine', emoji: '🚢'}, {name: 'Hot Air Balloon', emoji: '🎈'}
-            ],
-            family: [
-                {name: 'Mother', emoji: '👩'}, {name: 'Father', emoji: '👨'}, {name: 'Sister', emoji: '👧'},
-                {name: 'Brother', emoji: '👦'}, {name: 'Grandmother', emoji: '👵'}, {name: 'Grandfather', emoji: '👴'},
-                {name: 'Baby', emoji: '👶'}, {name: 'Aunt', emoji: '👩'}, {name: 'Uncle', emoji: '👨'},
-                {name: 'Cousin', emoji: '👧'}, {name: 'Son', emoji: '👦'}, {name: 'Daughter', emoji: '👧'},
-                {name: 'Parents', emoji: '👨‍👩‍👧'}, {name: 'Siblings', emoji: '👧👦'}, {name: 'Family', emoji: '👨‍👩‍👧‍👦'},
-                {name: 'Twins', emoji: '👯'}, {name: 'Grandparents', emoji: '👴👵'}, {name: 'Niece', emoji: '👧'},
-                {name: 'Nephew', emoji: '👦'}, {name: 'Pet', emoji: '🐕'}
-            ],
-            seasons: [
-                {name: 'Spring', emoji: '🌸'}, {name: 'Summer', emoji: '☀️'}, {name: 'Autumn', emoji: '🍂'},
-                {name: 'Winter', emoji: '❄️'}, {name: 'Fall Leaves', emoji: '🍁'}, {name: 'Cherry Blossoms', emoji: '🌸'},
-                {name: 'Hot Sun', emoji: '🌞'}, {name: 'Snowflakes', emoji: '❄️'}, {name: 'Rain', emoji: '🌧️'},
-                {name: 'Flowers Blooming', emoji: '🌺'}, {name: 'Beach Time', emoji: '🏖️'}, {name: 'Harvest', emoji: '🌾'},
-                {name: 'Snow', emoji: '⛄'}, {name: 'Sunshine', emoji: '☀️'}, {name: 'Colorful Leaves', emoji: '🍂'},
-                {name: 'Cold Weather', emoji: '🥶'}, {name: 'Warm Weather', emoji: '🌡️'}, {name: 'Growing Plants', emoji: '🌱'},
-                {name: 'Pumpkin Season', emoji: '🎃'}, {name: 'Holiday Season', emoji: '🎄'}
-            ],
-            weather: [
-                {name: 'Sunny', emoji: '☀️'}, {name: 'Cloudy', emoji: '☁️'}, {name: 'Rainy', emoji: '🌧️'},
-                {name: 'Snowy', emoji: '❄️'}, {name: 'Windy', emoji: '💨'}, {name: 'Stormy', emoji: '⛈️'},
-                {name: 'Foggy', emoji: '🌫️'}, {name: 'Hot', emoji: '🌡️'}, {name: 'Cold', emoji: '🥶'},
-                {name: 'Rainbow', emoji: '🌈'}, {name: 'Thunder', emoji: '⚡'}, {name: 'Lightning', emoji: '⚡'},
-                {name: 'Hail', emoji: '🧊'}, {name: 'Tornado', emoji: '🌪️'}, {name: 'Hurricane', emoji: '🌀'},
-                {name: 'Partly Cloudy', emoji: '⛅'}, {name: 'Drizzle', emoji: '🌦️'}, {name: 'Sleet', emoji: '🌨️'},
-                {name: 'Frost', emoji: '❄️'}, {name: 'Humid', emoji: '💧'}
-            ],
-            restaurant: [
-                {name: 'Pizza', emoji: '🍕'}, {name: 'Burger', emoji: '🍔'}, {name: 'French Fries', emoji: '🍟'},
-                {name: 'Hot Dog', emoji: '🌭'}, {name: 'Sandwich', emoji: '🥪'}, {name: 'Taco', emoji: '🌮'},
-                {name: 'Sushi', emoji: '🍣'}, {name: 'Pasta', emoji: '🍝'}, {name: 'Salad', emoji: '🥗'},
-                {name: 'Soup', emoji: '🍲'}, {name: 'Chicken', emoji: '🍗'}, {name: 'Steak', emoji: '🥩'},
-                {name: 'Ice Cream', emoji: '🍦'}, {name: 'Cake', emoji: '🍰'}, {name: 'Cookie', emoji: '🍪'},
-                {name: 'Donut', emoji: '🍩'}, {name: 'Pancakes', emoji: '🥞'}, {name: 'Waffle', emoji: '🧇'},
-                {name: 'Soda', emoji: '🥤'}, {name: 'Milkshake', emoji: '🥤'}
-            ],
-            kitchen: [
-                {name: 'Plate', emoji: '🍽️'}, {name: 'Fork', emoji: '🍴'}, {name: 'Spoon', emoji: '🥄'},
-                {name: 'Knife', emoji: '🔪'}, {name: 'Cup', emoji: '☕'}, {name: 'Glass', emoji: '🥛'},
-                {name: 'Bowl', emoji: '🥣'}, {name: 'Pot', emoji: '🍲'}, {name: 'Pan', emoji: '🍳'},
-                {name: 'Oven', emoji: '🔥'}, {name: 'Refrigerator', emoji: '🧊'}, {name: 'Microwave', emoji: '📻'},
-                {name: 'Blender', emoji: '🥤'}, {name: 'Toaster', emoji: '🍞'}, {name: 'Kettle', emoji: '🫖'},
-                {name: 'Cutting Board', emoji: '🔪'}, {name: 'Spatula', emoji: '🍳'}, {name: 'Whisk', emoji: '🥄'},
-                {name: 'Measuring Cup', emoji: '🥛'}, {name: 'Rolling Pin', emoji: '🥖'}
-            ],
-            vegetables: [
-                {name: 'Carrot', emoji: '🥕'}, {name: 'Broccoli', emoji: '🥦'}, {name: 'Tomato', emoji: '🍅'},
-                {name: 'Potato', emoji: '🥔'}, {name: 'Corn', emoji: '🌽'}, {name: 'Cucumber', emoji: '🥒'},
-                {name: 'Lettuce', emoji: '🥬'}, {name: 'Onion', emoji: '🧅'}, {name: 'Garlic', emoji: '🧄'},
-                {name: 'Pepper', emoji: '🫑'}, {name: 'Eggplant', emoji: '🍆'}, {name: 'Pumpkin', emoji: '🎃'},
-                {name: 'Cabbage', emoji: '🥬'}, {name: 'Celery', emoji: '🥬'}, {name: 'Spinach', emoji: '🥬'},
-                {name: 'Mushroom', emoji: '🍄'}, {name: 'Peas', emoji: '🫛'}, {name: 'Green Beans', emoji: '🫛'},
-                {name: 'Radish', emoji: '🥕'}, {name: 'Cauliflower', emoji: '🥦'}
-            ],
-            fruits: [
-                {name: 'Apple', emoji: '🍎'}, {name: 'Banana', emoji: '🍌'}, {name: 'Orange', emoji: '🍊'},
-                {name: 'Grapes', emoji: '🍇'}, {name: 'Strawberry', emoji: '🍓'}, {name: 'Watermelon', emoji: '🍉'},
-                {name: 'Pineapple', emoji: '🍍'}, {name: 'Mango', emoji: '🥭'}, {name: 'Peach', emoji: '🍑'},
-                {name: 'Pear', emoji: '🍐'}, {name: 'Cherry', emoji: '🍒'}, {name: 'Kiwi', emoji: '🥝'},
-                {name: 'Lemon', emoji: '🍋'}, {name: 'Coconut', emoji: '🥥'}, {name: 'Avocado', emoji: '🥑'},
-                {name: 'Blueberry', emoji: '🫐'}, {name: 'Melon', emoji: '🍈'}, {name: 'Papaya', emoji: '🍈'},
-                {name: 'Plum', emoji: '🍑'}, {name: 'Raspberry', emoji: '🍓'}
-            ]
+            polygons: [ {name: 'Triangle', emoji: '🔺'}, {name: 'Quadrilateral', emoji: '🟦'}, {name: 'Pentagon', emoji: '⬟'}, {name: 'Hexagon', emoji: '⬡'}, {name: 'Heptagon', emoji: '⬢'}, {name: 'Octagon', emoji: '🛑'}, {name: 'Nonagon', emoji: '⬢'}, {name: 'Decagon', emoji: '⬢'}, {name: 'Square', emoji: '🟦'}, {name: 'Rectangle', emoji: '▭'}, {name: 'Rhombus', emoji: '🔷'}, {name: 'Trapezoid', emoji: '▱'}, {name: 'Parallelogram', emoji: '▱'}, {name: 'Kite', emoji: '🪁'}, {name: 'Equilateral Triangle', emoji: '🔺'}, {name: 'Isosceles Triangle', emoji: '🔺'}, {name: 'Right Triangle', emoji: '📐'}, {name: 'Scalene Triangle', emoji: '🔺'}, {name: 'Regular Pentagon', emoji: '⬟'}, {name: 'Regular Hexagon', emoji: '⬡'} ],
+            careers: [ {name: 'Doctor', emoji: '👨‍⚕️'}, {name: 'Nurse', emoji: '👩‍⚕️'}, {name: 'Teacher', emoji: '👨‍🏫'}, {name: 'Police Officer', emoji: '👮'}, {name: 'Firefighter', emoji: '👨‍🚒'}, {name: 'Chef', emoji: '👨‍🍳'}, {name: 'Farmer', emoji: '👨‍🌾'}, {name: 'Pilot', emoji: '👨‍✈️'}, {name: 'Astronaut', emoji: '👨‍🚀'}, {name: 'Engineer', emoji: '👷'}, {name: 'Artist', emoji: '👨‍🎨'}, {name: 'Musician', emoji: '👨‍🎤'}, {name: 'Scientist', emoji: '👨‍🔬'}, {name: 'Dentist', emoji: '🦷'}, {name: 'Veterinarian', emoji: '👨‍⚕️'}, {name: 'Baker', emoji: '🧑‍🍳'}, {name: 'Mail Carrier', emoji: '📬'}, {name: 'Mechanic', emoji: '🔧'}, {name: 'Librarian', emoji: '📚'}, {name: 'Architect', emoji: '📐'} ],
+            transport: [ {name: 'Car', emoji: '🚗'}, {name: 'Bus', emoji: '🚌'}, {name: 'Train', emoji: '🚂'}, {name: 'Airplane', emoji: '✈️'}, {name: 'Helicopter', emoji: '🚁'}, {name: 'Boat', emoji: '⛵'}, {name: 'Ship', emoji: '🚢'}, {name: 'Bicycle', emoji: '🚲'}, {name: 'Motorcycle', emoji: '🏍️'}, {name: 'Truck', emoji: '🚚'}, {name: 'Taxi', emoji: '🚕'}, {name: 'Ambulance', emoji: '🚑'}, {name: 'Fire Truck', emoji: '🚒'}, {name: 'Police Car', emoji: '🚓'}, {name: 'Tractor', emoji: '🚜'}, {name: 'Rocket', emoji: '🚀'}, {name: 'Scooter', emoji: '🛴'}, {name: 'Skateboard', emoji: '🛹'}, {name: 'Submarine', emoji: '🚢'}, {name: 'Hot Air Balloon', emoji: '🎈'} ],
+            family: [ {name: 'Mother', emoji: '👩'}, {name: 'Father', emoji: '👨'}, {name: 'Sister', emoji: '👧'}, {name: 'Brother', emoji: '👦'}, {name: 'Grandmother', emoji: '👵'}, {name: 'Grandfather', emoji: '👴'}, {name: 'Baby', emoji: '👶'}, {name: 'Aunt', emoji: '👩'}, {name: 'Uncle', emoji: '👨'}, {name: 'Cousin', emoji: '👧'}, {name: 'Son', emoji: '👦'}, {name: 'Daughter', emoji: '👧'}, {name: 'Parents', emoji: '👨‍👩‍👧'}, {name: 'Siblings', emoji: '👧👦'}, {name: 'Family', emoji: '👨‍👩‍👧‍👦'}, {name: 'Twins', emoji: '👯'}, {name: 'Grandparents', emoji: '👴👵'}, {name: 'Niece', emoji: '👧'}, {name: 'Nephew', emoji: '👦'}, {name: 'Pet', emoji: '🐕'} ],
+            seasons: [ {name: 'Spring', emoji: '🌸'}, {name: 'Summer', emoji: '☀️'}, {name: 'Autumn', emoji: '🍂'}, {name: 'Winter', emoji: '❄️'}, {name: 'Fall Leaves', emoji: '🍁'}, {name: 'Cherry Blossoms', emoji: '🌸'}, {name: 'Hot Sun', emoji: '🌞'}, {name: 'Snowflakes', emoji: '❄️'}, {name: 'Rain', emoji: '🌧️'}, {name: 'Flowers Blooming', emoji: '🌺'}, {name: 'Beach Time', emoji: '🏖️'}, {name: 'Harvest', emoji: '🌾'}, {name: 'Snow', emoji: '⛄'}, {name: 'Sunshine', emoji: '☀️'}, {name: 'Colorful Leaves', emoji: '🍂'}, {name: 'Cold Weather', emoji: '🥶'}, {name: 'Warm Weather', emoji: '🌡️'}, {name: 'Growing Plants', emoji: '🌱'}, {name: 'Pumpkin Season', emoji: '🎃'}, {name: 'Holiday Season', emoji: '🎄'} ],
+            weather: [ {name: 'Sunny', emoji: '☀️'}, {name: 'Cloudy', emoji: '☁️'}, {name: 'Rainy', emoji: '🌧️'}, {name: 'Snowy', emoji: '❄️'}, {name: 'Windy', emoji: '💨'}, {name: 'Stormy', emoji: '⛈️'}, {name: 'Foggy', emoji: '🌫️'}, {name: 'Hot', emoji: '🌡️'}, {name: 'Cold', emoji: '🥶'}, {name: 'Rainbow', emoji: '🌈'}, {name: 'Thunder', emoji: '⚡'}, {name: 'Lightning', emoji: '⚡'}, {name: 'Hail', emoji: '🧊'}, {name: 'Tornado', emoji: '🌪️'}, {name: 'Hurricane', emoji: '🌀'}, {name: 'Partly Cloudy', emoji: '⛅'}, {name: 'Drizzle', emoji: '🌦️'}, {name: 'Sleet', emoji: '🌨️'}, {name: 'Frost', emoji: '❄️'}, {name: 'Humid', emoji: '💧'} ],
+            restaurant: [ {name: 'Pizza', emoji: '🍕'}, {name: 'Burger', emoji: '🍔'}, {name: 'French Fries', emoji: '🍟'}, {name: 'Hot Dog', emoji: '🌭'}, {name: 'Sandwich', emoji: '🥪'}, {name: 'Taco', emoji: '🌮'}, {name: 'Sushi', emoji: '🍣'}, {name: 'Pasta', emoji: '🍝'}, {name: 'Salad', emoji: '🥗'}, {name: 'Soup', emoji: '🍲'}, {name: 'Chicken', emoji: '🍗'}, {name: 'Steak', emoji: '🥩'}, {name: 'Ice Cream', emoji: '🍦'}, {name: 'Cake', emoji: '🍰'}, {name: 'Cookie', emoji: '🍪'}, {name: 'Donut', emoji: '🍩'}, {name: 'Pancakes', emoji: '🥞'}, {name: 'Waffle', emoji: '🧇'}, {name: 'Soda', emoji: '🥤'}, {name: 'Milkshake', emoji: '🥤'} ],
+            kitchen: [ {name: 'Plate', emoji: '🍽️'}, {name: 'Fork', emoji: '🍴'}, {name: 'Spoon', emoji: '🥄'}, {name: 'Knife', emoji: '🔪'}, {name: 'Cup', emoji: '☕'}, {name: 'Glass', emoji: '🥛'}, {name: 'Bowl', emoji: '🥣'}, {name: 'Pot', emoji: '🍲'}, {name: 'Pan', emoji: '🍳'}, {name: 'Oven', emoji: '🔥'}, {name: 'Refrigerator', emoji: '🧊'}, {name: 'Microwave', emoji: '📻'}, {name: 'Blender', emoji: '🥤'}, {name: 'Toaster', emoji: '🍞'}, {name: 'Kettle', emoji: '🫖'}, {name: 'Cutting Board', emoji: '🔪'}, {name: 'Spatula', emoji: '🍳'}, {name: 'Whisk', emoji: '🥄'}, {name: 'Measuring Cup', emoji: '🥛'}, {name: 'Rolling Pin', emoji: '🥖'} ],
+            vegetables: [ {name: 'Carrot', emoji: '🥕'}, {name: 'Broccoli', emoji: '🥦'}, {name: 'Tomato', emoji: '🍅'}, {name: 'Potato', emoji: '🥔'}, {name: 'Corn', emoji: '🌽'}, {name: 'Cucumber', emoji: '🥒'}, {name: 'Lettuce', emoji: '🥬'}, {name: 'Onion', emoji: '🧅'}, {name: 'Garlic', emoji: '🧄'}, {name: 'Pepper', emoji: '🫑'}, {name: 'Eggplant', emoji: '🍆'}, {name: 'Pumpkin', emoji: '🎃'}, {name: 'Cabbage', emoji: '🥬'}, {name: 'Celery', emoji: '🥬'}, {name: 'Spinach', emoji: '🥬'}, {name: 'Mushroom', emoji: '🍄'}, {name: 'Peas', emoji: '🫛'}, {name: 'Green Beans', emoji: '🫛'}, {name: 'Radish', emoji: '🥕'}, {name: 'Cauliflower', emoji: '🥦'} ],
+            fruits: [ {name: 'Apple', emoji: '🍎'}, {name: 'Banana', emoji: '🍌'}, {name: 'Orange', emoji: '🍊'}, {name: 'Grapes', emoji: '🍇'}, {name: 'Strawberry', emoji: '🍓'}, {name: 'Watermelon', emoji: '🍉'}, {name: 'Pineapple', emoji: '🍍'}, {name: 'Mango', emoji: '🥭'}, {name: 'Peach', emoji: '🍑'}, {name: 'Pear', emoji: '🍐'}, {name: 'Cherry', emoji: '🍒'}, {name: 'Kiwi', emoji: '🥝'}, {name: 'Lemon', emoji: '🍋'}, {name: 'Coconut', emoji: '🥥'}, {name: 'Avocado', emoji: '🥑'}, {name: 'Blueberry', emoji: '🫐'}, {name: 'Melon', emoji: '🍈'}, {name: 'Papaya', emoji: '🍈'}, {name: 'Plum', emoji: '🍑'}, {name: 'Raspberry', emoji: '🍓'} ]
         };
 
         let currentCategory = '';
         let currentIndex = 0;
+        let currentWord = '';
+
+        const PEXELS_API_KEY = "ILRTk4vCDhwNFMRUWz9or1QAl9uEdRnF8CxWWnheDE2BLRWNGlwn78sW";
+
+        const flashcardImage = document.getElementById('flashcardImage');
+        const flashcardName = document.getElementById('flashcardName');
+        const counter = document.getElementById('counter');
+        const searchInput = document.getElementById('search-input');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        async function searchPicture() {
+            const searchTerm = searchInput.value.trim();
+            if (!searchTerm) return;
+            
+            flashcardImage.innerHTML = 'Loading...';
+            flashcardName.textContent = 'Searching...';
+            currentWord = searchTerm;
+            counter.textContent = "Search Result";
+            prevBtn.style.display = 'none';
+            nextBtn.style.display = 'none';
+            
+            const url = `https://api.pexels.com/v1/search?query=${searchTerm}&per_page=1`;
+            try {
+                const response = await fetch(url, { headers: { Authorization: PEXELS_API_KEY } });
+                const data = await response.json();
+                if (data.photos && data.photos.length > 0) {
+                    const imageUrl = data.photos[0].src.large;
+                    flashcardImage.innerHTML = `<img src="${imageUrl}" alt="${searchTerm}">`;
+                    const capitalizedWord = searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1);
+                    flashcardName.textContent = capitalizedWord;
+                    currentWord = capitalizedWord;
+                    speakCurrentWord();
+                } else {
+                    flashcardImage.textContent = '😢';
+                    flashcardName.textContent = 'Not Found';
+                    currentWord = 'Not Found';
+                }
+            } catch (error) {
+                flashcardImage.textContent = '❌';
+                flashcardName.textContent = 'Error';
+                currentWord = 'Error';
+                console.error("Pexels API Error:", error);
+            }
+        }
+        
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') searchPicture();
+        });
 
         function showCategory(category) {
             currentCategory = category;
             currentIndex = 0;
-            document.getElementById('categories').style.display = 'none';
-            document.getElementById('flashcardContainer').classList.add('active');
+            prevBtn.style.display = 'block';
+            nextBtn.style.display = 'block';
             showCard();
         }
 
         function showCard() {
-            const cards = flashcards[currentCategory];
-            const card = cards[currentIndex];
-            document.getElementById('flashcardImage').textContent = card.emoji;
-            document.getElementById('flashcardName').textContent = card.name;
-            document.getElementById('counter').textContent = `${currentIndex + 1} of ${cards.length}`;
-            speakCard();
+            const card = flashcards[currentCategory][currentIndex];
+            flashcardImage.innerHTML = card.emoji;
+            flashcardName.textContent = card.name;
+            currentWord = card.name;
+            counter.textContent = `${currentIndex + 1} of ${flashcards[currentCategory].length}`;
+            speakCurrentWord();
         }
 
         function nextCard() {
@@ -366,36 +322,22 @@
             showCard();
         }
 
-        function speakCard() {
-            const cards = flashcards[currentCategory];
-            const card = cards[currentIndex];
-            
-            if ('speechSynthesis' in window) {
+        function speakCurrentWord() {
+            if ('speechSynthesis' in window && currentWord) {
                 window.speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance(card.name);
+                const utterance = new SpeechSynthesisUtterance(currentWord);
                 utterance.rate = 0.8;
                 utterance.pitch = 1.2;
-                utterance.volume = 1;
                 window.speechSynthesis.speak(utterance);
             }
         }
-
-        function backToCategories() {
-            document.getElementById('categories').style.display = 'grid';
-            document.getElementById('flashcardContainer').classList.remove('active');
-            window.speechSynthesis.cancel();
-        }
-
-        // Keyboard navigation
+        
         document.addEventListener('keydown', (e) => {
-            if (document.getElementById('flashcardContainer').classList.contains('active')) {
-                if (e.key === 'ArrowRight') nextCard();
-                if (e.key === 'ArrowLeft') prevCard();
-                if (e.key === ' ') {
-                    e.preventDefault();
-                    speakCard();
-                }
-                if (e.key === 'Escape') backToCategories();
+            if (nextBtn.style.display !== 'none' && e.key === 'ArrowRight') nextCard();
+            if (prevBtn.style.display !== 'none' && e.key === 'ArrowLeft') prevCard();
+            if (e.key === ' ') {
+                e.preventDefault();
+                speakCurrentWord();
             }
         });
     </script>

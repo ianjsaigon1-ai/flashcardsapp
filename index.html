@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preschool Flashcards</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); height: 100vh; overflow: hidden; }
+        .app-container { display: flex; height: 100%; }
+        .sidebar { width: 280px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); padding: 20px; display: flex; flex-direction: column; border-right: 1px solid rgba(255, 255, 255, 0.2); }
+        .sidebar h2 { text-align: center; color: white; font-size: 1.5em; margin-bottom: 15px; text-shadow: 1px 1px 3px rgba(0,0,0,0.3); }
+        .search-container input { width: 100%; padding: 10px; border-radius: 8px; border: none; font-size: 1em; margin-bottom: 8px; }
+        .search-container button { width: 100%; padding: 10px; font-size: 1em; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; background: #51cf66; transition: all 0.2s; }
+        .search-container button:hover { background: #40c057; }
+        .categories { flex-grow: 1; overflow-y: auto; margin-top: 15px; padding-right: 5px; }
+        .category-btn { width: 100%; padding: 12px; margin-bottom: 8px; font-size: 1em; font-weight: bold; border: none; border-radius: 10px; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.2); color: white; text-align: left; }
+        .category-btn:hover { transform: scale(1.03); }
+        .main-content { flex-grow: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .flashcard-container { background: white; border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center; width: 100%; max-width: 400px; }
+        .flashcard-image { width: 100%; height: 250px; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 120px; background: #f8f9fa; border-radius: 15px; border: 3px solid #ddd; overflow: hidden; }
+        .flashcard-image img { width: 100%; height: 100%; object-fit: cover; }
+        .flashcard-name { font-size: 2.2em; color: #333; margin-bottom: 20px; font-weight: bold; min-height: 40px;}
+        .controls { display: flex; gap: 10px; justify-content: center; }
+        .control-btn { padding: 10px 20px; font-size: 1em; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; color: white; }
+        .btn-prev { background: #ff6b6b; }
+        .btn-next { background: #51cf66; }
+        .btn-speak { background: #4dabf7; }
+        .counter { font-size: 1.1em; color: #666; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <h2>Categories</h2>
+            <div class="search-container">
+                 <input type="text" id="search-input" placeholder="Search any word...">
+                 <button onclick="searchPicture()">Search</button>
+            </div>
+            <div class="categories" id="categories">
+                <button class="category-btn" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);" onclick="showCategory('wild')">🦁 Wild Animals</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);" onclick="showCategory('pets')">🐶 Pets</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);" onclick="showCategory('space')">🚀 Space</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);" onclick="showCategory('body')">👋 Human Body</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);" onclick="showCategory('colors')">🎨 Colors</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);" onclick="showCategory('shapes')">⭐️ Shapes</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);" onclick="showCategory('numbers')">🔢 Numbers</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);" onclick="showCategory('polygons')">💠 Polygons</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #ff6e7f 0%, #bfe9ff 100%);" onclick="showCategory('careers')">🧑‍🏫 Careers</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);" onclick="showCategory('transport')">🚗 Transport</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);" onclick="showCategory('family')">👨‍👩‍👧‍👦 Family</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);" onclick="showCategory('seasons')">🍂 Seasons</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);" onclick="showCategory('weather')">☀️ Weather</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);" onclick="showCategory('restaurant')">🍔 Restaurant</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);" onclick="showCategory('kitchen')">🍳 Kitchen</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);" onclick="showCategory('vegetables')">🥦 Vegetables</button>
+                <button class="category-btn" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);" onclick="showCategory('fruits')">🍓 Fruits</button>
+            </div>
+        </aside>
+        <main class="main-content">
+            <div class="flashcard-container" id="flashcardContainer">
+                <div class="flashcard-image" id="flashcardImage">Welcome!</div>
+                <div class="flashcard-name" id="flashcardName">Select or search</div>
+                <div class="counter" id="counter"></div>
+                <div class="controls">
+                    <button id="prevBtn" class="control-btn btn-prev" onclick="prevCard()">⬅️ Prev</button>
+                    <button class="control-btn btn-speak" onclick="speakCurrentWord()">🔊 Say It</button>
+                    <button id="nextBtn" class="control-btn btn-next" onclick="nextCard()">Next ➡️</button>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script>
+        const flashcards = {
+            wild: [ 
+                {name: 'Lion', emoji: '🦁'}, 
+                {name: 'Tiger', emoji: '🐯'}, 
+                {name: 'Elephant', emoji: '🐘'}, 
+                {name: 'Giraffe', emoji: '🦒'}, 
+                {name: 'Zebra', emoji: '🦓'}, 
+                {name: 'Monkey', emoji: '🐵'}, 
+                {name: 'Gorilla', emoji: '🦍'}, 
+                {name: 'Bear', emoji: '🐻'}, 
+                {name: 'Panda', emoji: '🐼'}, 
+                {name: 'Fox', emoji: '🦊'},
+                {name: 'Lion', emoji: '🦁'}, 
+                {name: 'Hippopotamus', emoji: '🦛'},
+                {name: 'Rhinoceros', emoji: '🦏'},
+                {name: 'Leopard', emoji: '🐆'}
+            ],
+            pets: [ 
+                {name: 'Dog', emoji: '🐕'}, 
+                {name: 'Cat', emoji: '🐈'}, 
+                {name: 'Rabbit', emoji: '🐇'}, 
+                {name: 'Hamster', emoji: '🐹'}, 
+                {name: 'Fish', emoji: '🐠'}, 
+                {name: 'Parrot', emoji: '🦜'} 
+            ],
+            space: [ 
+                {name: 'Sun', emoji: '☀️'}, 
+                {name: 'Moon', emoji: '🌙'}, 
+                {name: 'Star', emoji: '⭐'}, 
+                {name: 'Earth', emoji: '🌍'}, 
+                {name: 'Rocket', emoji: '🚀'}, 
+                {name: 'Alien', emoji: '👽'},
+                {name: 'Neptune', emoji: '🔵'},
+                {name: 'Saturn', emoji: '⭕'}
+            ],
+            body: [ 
+                {name: 'Head', emoji: '🗣️'}, 
+                {name: 'Eyes', emoji: '👀'}, 
+                {name: 'Nose', emoji: '👃'}, 
+                {name: 'Mouth', emoji: '👄'}, 
+                {name: 'Ears', emoji: '👂'}, 
+                {name: 'Hands', emoji: '🤚'}, 
+                {name: 'Feet', emoji: '🦶'},
+                {name: 'Teeth', emoji: '😁'},
+                {name: 'Tongue', emoji: '👅'}
+            ],
+            colors: [ 
+                {name: 'Red', emoji: '<span style="display:inline-block;width:80px;height:80px;background:#ef4444;border-radius:50%;"></span>'},
+                {name: 'Blue', emoji: '<span style="display:inline-block;width:80px;height:80px;background:#3b82f6;border-radius:50%;"></span>'},
+                {name: 'Yellow', emoji: '<span style="display:inline-block;width:80px;height:80px;background:#eab308;border-radius:50%;"></span>'},
+                {name: 'Green', emoji: '<span style="display:inline-block;width:80px;height:80px;background:#22c55e;border-radius:50%;"></span>'},
+                {name: 'Orange', emoji: '<span style="display:inline-block;width:80px;height:80px;background:#f97316;border-radius:50%;"></span>'},
+                {name: 'Purple', emoji: '<span style="display:inline-block;width:80px;height:80px;background:#a855f7;border-radius:50%;"></span>'},
+                {name: 'Pink', emoji: '<span style="display:inline-block;width:80px;height:80px;background:#ec4899;border-radius:50%;"></span>'},
+                {name: 'Brown', emoji: '<span style="display:inline-block;width:80px;height:80px;background:#92400e;border-radius:50%;"></span>'},
+                {name: 'Black', emoji: '<span style="display:inline-block;width:80px;height:80px;background:#000000;border-radius:50%;"></span>'},
+                {name: 'White', emoji: '<span style="display:inline-block;width:80px;height:80px;background:#ffffff;border-radius:50%;border:3px solid #ddd;"></span>'},
+                {name: 'Gray', emoji: '<span style="display:inline-block;width:80px;height:80px;background:#6b7280;border-radius:50%;"></span>'},
+                {name: 'Rainbow', emoji: '🌈'}
+            ],
+            shapes: [ 
+                {name: 'Circle', emoji: '⭕'}, 
+                {name: 'Square', emoji: '⬜'}, 
+                {name: 'Triangle', emoji: '🔺'}, 
+                {name: 'Star', emoji: '⭐'}, 
+                {name: 'Heart', emoji: '❤️'},
+                {name: 'Diamond', emoji: '💎'}
+            ],
+            numbers: Array.from({length: 20}, (_, i) => ({name: `${i + 1}`, emoji: `${i + 1}`})),
+            polygons: [ 
+                {name: 'Triangle', emoji: '🔺'}, 
+                {name: 'Square', emoji: '⬜'}, 
+                {name: 'Pentagon', emoji: '⬟'}, 
+                {name: 'Hexagon', emoji: '⬡'},
+                {name: 'Octagon', emoji: '🛑'}
+            ],
+            careers: [ 
+                {name: 'Doctor', emoji: '👨‍⚕️'}, 
+                {name: 'Teacher', emoji: '👨‍🏫'}, 
+                {name: 'Police Officer', emoji: '👮'}, 
+                {name: 'Firefighter', emoji: '👨‍🚒'}, 
+                {name: 'Chef', emoji: '👨‍🍳'},
+                {name: 'Pilot', emoji: '👨‍✈️'},
+                {name: 'Farmer', emoji: '👨‍🌾'}
+            ],
+            transport: [ 
+                {name: 'Car', emoji: '🚗'}, 
+                {name: 'Bus', emoji: '🚌'}, 
+                {name: 'Train', emoji: '🚂'}, 
+                {name: 'Airplane', emoji: '✈️'}, 
+                {name: 'Boat', emoji: '⛵'},
+                {name: 'Bicycle', emoji: '🚲'},
+                {name: 'Helicopter', emoji: '🚁'}
+            ],
+            family: [ 
+                {name: 'Mother', emoji: '👩'}, 
+                {name: 'Father', emoji: '👨'}, 
+                {name: 'Sister', emoji: '👧'}, 
+                {name: 'Brother', emoji: '👦'}, 
+                {name: 'Baby', emoji: '👶'},
+                {name: 'Grandma', emoji: '👵'},
+                {name: 'Grandpa', emoji: '👴'}
+            ],
+            seasons: [ 
+                {name: 'Spring', emoji: '🌸'}, 
+                {name: 'Summer', emoji: '☀️'}, 
+                {name: 'Autumn', emoji: '🍂'}, 
+                {name: 'Winter', emoji: '❄️'} 
+            ],
+            weather: [ 
+                {name: 'Sunny', emoji: '☀️'}, 
+                {name: 'Cloudy', emoji: '☁️'}, 
+                {name: 'Rainy', emoji: '🌧️'}, 
+                {name: 'Snowy', emoji: '❄️'}, 
+                {name: 'Windy', emoji: '💨'},
+                {name: 'Rainbow', emoji: '🌈'}
+            ],
+            restaurant: [ 
+                {name: 'Pizza', emoji: '🍕'}, 
+                {name: 'Burger', emoji: '🍔'}, 
+                {name: 'Fries', emoji: '🍟'}, 
+                {name: 'Ice Cream', emoji: '🍦'},
+                {name: 'Sandwich', emoji: '🥪'},
+                {name: 'Soda', emoji: '🥤'}
+            ],
+            kitchen: [ 
+                {name: 'Plate', emoji: '🍽️'}, 
+                {name: 'Fork', emoji: '🍴'}, 
+                {name: 'Spoon', emoji: '🥄'}, 
+                {name: 'Cup', emoji: '☕'}, 
+                {name: 'Knife', emoji: '🔪'},
+                {name: 'Pot', emoji: '🍲'},
+                {name: 'Pan', emoji: '🍳'}
+            ],
+            vegetables: [ 
+                {name: 'Carrot', emoji: '🥕'}, 
+                {name: 'Broccoli', emoji: '🥦'}, 
+                {name: 'Tomato', emoji: '🍅'}, 
+                {name: 'Corn', emoji: '🌽'},
+                {name: 'Cucumber', emoji: '🥒'},
+                {name: 'Potato', emoji: '🥔'},
+                {name: 'Lettuce', emoji: '🥬'}
+            ],
+            fruits: [ 
+                {name: 'Apple', emoji: '🍎'}, 
+                {name: 'Banana', emoji: '🍌'}, 
+                {name: 'Orange', emoji: '🍊'}, 
+                {name: 'Grapes', emoji: '🍇'}, 
+                {name: 'Strawberry', emoji: '🍓'},
+                {name: 'Watermelon', emoji: '🍉'},
+                {name: 'Lemon', emoji: '🍋'},
+                {name: 'Kiwi', emoji: '🥝'}
+            ]
+        };
+        let currentCategory = '';
+        let currentIndex = 0;
+        let currentWord = '';
+        const PEXELS_API_KEY = "ILRTk4vCDhwNFMRUWz9or1QAl9uEdRnF8CxWWnheDE2BLRWNGlwn78sW";
+        const flashcardImage = document.getElementById('flashcardImage');
+        const flashcardName = document.getElementById('flashcardName');
+        const counter = document.getElementById('counter');
+        const searchInput = document.getElementById('search-input');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        async function searchPicture() {
+            const searchTerm = searchInput.value.trim();
+            if (!searchTerm) return;
+            flashcardImage.innerHTML = '...';
+            flashcardName.textContent = 'Searching';
+            currentWord = searchTerm;
+            counter.textContent = "Search";
+            prevBtn.style.display = 'none';
+            nextBtn.style.display = 'none';
+            const url = `https://api.pexels.com/v1/search?query=${searchTerm}&per_page=1`;
+            try {
+                const response = await fetch(url, { headers: { Authorization: PEXELS_API_KEY } });
+                const data = await response.json();
+                if (data.photos && data.photos.length > 0) {
+                    flashcardImage.innerHTML = `<img src="${data.photos[0].src.large}" alt="${searchTerm}">`;
+                    const capitalized = searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1);
+                    flashcardName.textContent = capitalized;
+                    currentWord = capitalized;
+                    speakCurrentWord();
+                } else {
+                    flashcardImage.textContent = '😢';
+                    flashcardName.textContent = 'Not Found';
+                }
+            } catch (error) {
+                flashcardImage.textContent = '❌';
+                flashcardName.textContent = 'Error';
+                console.error("Pexels Error:", error);
+            }
+        }
+        searchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') searchPicture(); });
+        function showCategory(category) {
+            currentCategory = category;
+            currentIndex = 0;
+            prevBtn.style.display = 'block';
+            nextBtn.style.display = 'block';
+            showCard();
+        }
+        function showCard() {
+            const card = flashcards[currentCategory][currentIndex];
+            flashcardImage.innerHTML = card.emoji;
+            flashcardName.textContent = card.name;
+            currentWord = card.name;
+            counter.textContent = `${currentIndex + 1}/${flashcards[currentCategory].length}`;
+            speakCurrentWord(false);
+        }
+        function nextCard() { currentIndex = (currentIndex + 1) % flashcards[currentCategory].length; showCard(); }
+        function prevCard() { currentIndex = (currentIndex - 1 + flashcards[currentCategory].length) % flashcards[currentCategory].length; showCard(); }
+        function speakCurrentWord(forceSpeak = true) {
+            if (forceSpeak && 'speechSynthesis' in window && currentWord) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(currentWord);
+                utterance.rate = 0.8;
+                utterance.pitch = 1.2;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+        document.addEventListener('keydown', (e) => {
+            if (nextBtn.style.display !== 'none' && e.key === 'ArrowRight') nextCard();
+            if (prevBtn.style.display !== 'none' && e.key === 'ArrowLeft') prevCard();
+            if (e.key === ' ') { e.preventDefault(); speakCurrentWord(); }
+        });
+    </script>
+</body>
+</html>
